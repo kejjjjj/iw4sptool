@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\cg">
+      <UniqueIdentifier>{d5b54b13-4e27-4db4-8755-8ad13119f0ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cm">
+      <UniqueIdentifier>{638fe35e-b0b1-4099-afe4-cca0476ad9ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\in">
+      <UniqueIdentifier>{f74a38f0-8685-450d-8ea4-64926f768e0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utils">
+      <UniqueIdentifier>{98ac7b82-0d0e-4402-b5e0-e752f6977da1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cmd">
+      <UniqueIdentifier>{d461b114-af34-432b-b12b-9a87e54bbc5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\r">
+      <UniqueIdentifier>{6cd2f522-89ee-4479-aa88-3913b92d3cca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\mh">
+      <UniqueIdentifier>{b677f8e7-b0d7-4fa1-8dcc-5e2b6a641b6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sys">
+      <UniqueIdentifier>{792469d3-5c37-4350-af97-3792cba4ae57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\r\gui">
+      <UniqueIdentifier>{1bdddf8e-0173-41d0-83bb-a483ef736e46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\imgui">
+      <UniqueIdentifier>{4ed214c3-c166-41fd-9534-235a53c8c809}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\wnd">
+      <UniqueIdentifier>{6e5b3111-8fea-428e-b5c9-9eb092b0c454}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dvar">
+      <UniqueIdentifier>{76376740-ac04-4a2e-b0a6-a6218aa8e413}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\r\backend">
+      <UniqueIdentifier>{505efab5-347f-4e66-8125-e2e1eb4c6933}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\com">
+      <UniqueIdentifier>{f88cbf83-926c-4ee9-9131-2a767683328e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cm\cm_brush.hpp">
+      <Filter>Source Files\cm</Filter>
+    </ClInclude>
+    <ClInclude Include="cg\cg_local.hpp">
+      <Filter>Source Files\cg</Filter>
+    </ClInclude>
+    <ClInclude Include="cg\cg_offsets.hpp">
+      <Filter>Source Files\cg</Filter>
+    </ClInclude>
+    <ClInclude Include="in\in_main.hpp">
+      <Filter>Source Files\in</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\engine.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd\cmd.hpp">
+      <Filter>Source Files\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="cg\cg_init.hpp">
+      <Filter>Source Files\cg</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\hook.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="r\r_drawactive.hpp">
+      <Filter>Source Files\r</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\defs.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\sys_thread.hpp">
+      <Filter>Source Files\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="r\r_drawtools.hpp">
+      <Filter>Source Files\r</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\vec.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\resolution.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="r\r_endscene.hpp">
+      <Filter>Source Files\r</Filter>
+    </ClInclude>
+    <ClInclude Include="r\gui\r_gui.hpp">
+      <Filter>Source Files\r\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="r\gui\r_console.hpp">
+      <Filter>Source Files\r\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="r\gui\r_main.hpp">
+      <Filter>Source Files\r\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="wnd\wndproc.hpp">
+      <Filter>Source Files\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="dvar\dvar.hpp">
+      <Filter>Source Files\dvar</Filter>
+    </ClInclude>
+    <ClInclude Include="r\backend\rb_endscene.hpp">
+      <Filter>Source Files\r\backend</Filter>
+    </ClInclude>
+    <ClInclude Include="cm\cm_renderer.hpp">
+      <Filter>Source Files\cm</Filter>
+    </ClInclude>
+    <ClInclude Include="com\com_vector.hpp">
+      <Filter>Source Files\com</Filter>
+    </ClInclude>
+    <ClInclude Include="cm\cm_typedefs.hpp">
+      <Filter>Source Files\cm</Filter>
+    </ClInclude>
+    <ClInclude Include="cm\cm_clipmap.hpp">
+      <Filter>Source Files\cm</Filter>
+    </ClInclude>
+    <ClInclude Include="cm\cm_debug.hpp">
+      <Filter>Source Files\cm</Filter>
+    </ClInclude>
+    <ClInclude Include="com\com_channel.hpp">
+      <Filter>Source Files\com</Filter>
+    </ClInclude>
+    <ClInclude Include="cm\cm_terrain.hpp">
+      <Filter>Source Files\cm</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cm\cm_brush.cpp">
+      <Filter>Source Files\cm</Filter>
+    </ClCompile>
+    <ClCompile Include="in\in_main.cpp">
+      <Filter>Source Files\in</Filter>
+    </ClCompile>
+    <ClCompile Include="cmd\cmd.cpp">
+      <Filter>Source Files\cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="cg\cg_init.cpp">
+      <Filter>Source Files\cg</Filter>
+    </ClCompile>
+    <ClCompile Include="r\r_drawactive.cpp">
+      <Filter>Source Files\r</Filter>
+    </ClCompile>
+    <ClCompile Include="mh\buffer.c">
+      <Filter>Source Files\mh</Filter>
+    </ClCompile>
+    <ClCompile Include="mh\hook.c">
+      <Filter>Source Files\mh</Filter>
+    </ClCompile>
+    <ClCompile Include="mh\trampoline.c">
+      <Filter>Source Files\mh</Filter>
+    </ClCompile>
+    <ClCompile Include="mh\hde\hde32.c">
+      <Filter>Source Files\mh</Filter>
+    </ClCompile>
+    <ClCompile Include="mh\hde\hde64.c">
+      <Filter>Source Files\mh</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\sys_thread.cpp">
+      <Filter>Source Files\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="r\r_drawtools.cpp">
+      <Filter>Source Files\r</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\resolution.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="r\r_endscene.cpp">
+      <Filter>Source Files\r</Filter>
+    </ClCompile>
+    <ClCompile Include="r\gui\r_gui.cpp">
+      <Filter>Source Files\r\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="r\gui\r_console.cpp">
+      <Filter>Source Files\r\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="r\gui\r_main.cpp">
+      <Filter>Source Files\r\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_tables.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_dx9.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="wnd\wndproc.cpp">
+      <Filter>Source Files\wnd</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_stdlib.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="dvar\dvar.cpp">
+      <Filter>Source Files\dvar</Filter>
+    </ClCompile>
+    <ClCompile Include="r\backend\rb_endscene.cpp">
+      <Filter>Source Files\r\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="cm\cm_renderer.cpp">
+      <Filter>Source Files\cm</Filter>
+    </ClCompile>
+    <ClCompile Include="com\com_vector.cpp">
+      <Filter>Source Files\com</Filter>
+    </ClCompile>
+    <ClCompile Include="cm\cm_typedefs.cpp">
+      <Filter>Source Files\cm</Filter>
+    </ClCompile>
+    <ClCompile Include="cm\cm_clipmap.cpp">
+      <Filter>Source Files\cm</Filter>
+    </ClCompile>
+    <ClCompile Include="cm\cm_debug.cpp">
+      <Filter>Source Files\cm</Filter>
+    </ClCompile>
+    <ClCompile Include="com\com_channel.cpp">
+      <Filter>Source Files\com</Filter>
+    </ClCompile>
+    <ClCompile Include="cm\cm_terrain.cpp">
+      <Filter>Source Files\cm</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
