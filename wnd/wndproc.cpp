@@ -7,7 +7,7 @@
 #include "cg/cg_offsets.hpp"
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam)) {
 		return 1l;
@@ -27,7 +27,7 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 			return 1;
 		}
 
-		if (s_wmv->mouseInitialized && CStaticConsoleGui::Console && CStaticConsoleGui::Console->IsOpen())
+		if (CStaticConsoleGui::Console && CStaticConsoleGui::Console->IsOpen())
 			return 1;
 
 		break;

@@ -8,3 +8,6 @@ struct CGDebugData
 	static volatile int tessIndices;
 	static GfxPointVertex g_debugPolyVerts[2725];
 };
+
+
+void CM_LoadDvars();

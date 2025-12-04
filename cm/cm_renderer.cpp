@@ -9,6 +9,7 @@
 #include "cm_debug.hpp"
 #include "com/com_channel.hpp"
 #include "com/com_vector.hpp"
+#include "dvar/dvar.hpp"
 
 #include <algorithm>
 #include <ranges>
@@ -27,14 +28,18 @@ void CM_ShowCollision()
 	{
 		.frustum_planes = frustum_planes,
 		.num_planes = 5,
-		.draw_dist = 2500,
-		.depth_test = true,
-		.poly_type = cm_polytype::pt_both,
-		.only_colliding = true,
-		.only_bounces = false,
-		.only_elevators = false,
-		.alpha = 0.2f
+		.draw_dist = Dvar_FindMalleableVar("cm_showCollisionDist")->current.value,
+		.depth_test = Dvar_FindMalleableVar("cm_depthTest")->current.enabled,
+		.poly_type = static_cast<cm_polytype>(Dvar_FindMalleableVar("cm_showCollisionPolyType")->current.integer),
+		.only_colliding = Dvar_FindMalleableVar("cm_ignoreNonColliding")->current.enabled,
+		.only_bounces = Dvar_FindMalleableVar("cm_onlyBounces")->current.enabled,
+		.only_elevators = Dvar_FindMalleableVar("cm_onlyElevators")->current.enabled,
+		.alpha = Dvar_FindMalleableVar("cm_showCollisionPolyAlpha")->current.value
 	};
+
+	const auto collisionType = static_cast<cm_showcollision_type>(Dvar_FindMalleableVar("cm_showCollision")->current.integer);
+	const bool brush_allowed = collisionType == cm_showcollision_type::BRUSHES || collisionType == cm_showcollision_type::BOTH;
+	const bool terrain_allowed = collisionType == cm_showcollision_type::TERRAIN || collisionType == cm_showcollision_type::BOTH;
 
 	CGDebugData::tessVerts = 0;
 	CGDebugData::tessIndices = 0;
@@ -49,8 +54,8 @@ void CM_ShowCollision()
 			if (RB_CheckTessOverflow(poly->m_numVerts, 3 * (poly->m_numVerts - 2)))
 				RB_TessOverflow(true, render_info.depth_test);
 
-			if (poly->Type() == cm_geomtype::brush
-				|| poly->Type() == cm_geomtype::terrain
+			if (poly->Type() == cm_geomtype::brush && brush_allowed
+				|| poly->Type() == cm_geomtype::terrain && terrain_allowed
 				|| poly->Type() == cm_geomtype::model) {
 				if (poly->RB_MakeInteriorsRenderable(render_info)) {
 					CGDebugData::tessVerts += poly->m_numVerts;
@@ -67,8 +72,8 @@ void CM_ShowCollision()
 
 		int vert_count = 0;
 		CClipMap::ForEach([&](const GeometryPtr_t& poly) {
-			if (poly->Type() == cm_geomtype::brush
-				|| poly->Type() == cm_geomtype::terrain
+			if (poly->Type() == cm_geomtype::brush && brush_allowed
+				|| poly->Type() == cm_geomtype::terrain && terrain_allowed
 				|| poly->Type() == cm_geomtype::model) {
 				if (poly->RB_MakeOutlinesRenderable(render_info, vert_count)) {
 					CGDebugData::tessVerts += poly->m_numVerts;

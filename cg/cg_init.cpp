@@ -16,8 +16,17 @@
 #include "utils/hook.hpp"
 #include "wnd/wndproc.hpp"
 #include "r/gui/r_console.hpp"
+#include "cm/cm_debug.hpp"
 
 using namespace std::chrono_literals;
+
+auto SteamTest()
+{
+	std::print("yoooo\n");
+	const auto v = Engine::Tools::Call<HANDLE>(0x004297D0);
+	*(HANDLE*)0x1BF9A44 = v;
+	return *(HANDLE*)0x1BF9A44;
+}
 
 void CG_Init() {
 
@@ -30,7 +39,20 @@ void CG_Init() {
 	CStaticHooks::Initialize();
 	CStaticMainGui::Initialize();
 
+	Engine::Tools::WriteBytes(0x424CB0, "\xC3");
+	Engine::Tools::WriteBytes(0x474E10, "\xC3");
+	Engine::Tools::WriteBytes(0x410870, "\xC3");
+	Engine::Tools::WriteBytes(0x401190, "\xC3");
+	Engine::Tools::WriteBytes(0x4516F0, "\xC3");
+	Engine::Tools::WriteBytes(0x427540, "\xC3");
+	Engine::Tools::WriteBytes(0x4A9F80, "\xC3");
+	Engine::Tools::WriteBytes(0x478980, "\xC3");
+	Engine::Tools::WriteBytes(0x4A6740, "\xC3");
+	Engine::Tools::WriteBytes(0x4093E0, "\xC3");
+
 	if (dx && dx->device) {
+		CStaticHooks::Create("SteamTest", 0x4257D0, SteamTest);
+
 		CStaticHooks::Create("R_EndScene", reinterpret_cast<std::uintptr_t>((*reinterpret_cast<PVOID**>(dx->device))[42]), R_EndScene);
 		CStaticHooks::Create("WndProc", 0x4D89E0, WndProc);
 		//CStaticHooks::Create("R_Shutdown", 0x50BE60, R_Shutdown);
@@ -40,7 +62,7 @@ void CG_Init() {
 		CStaticHooks::Create("__asm_adjacency_winding", 0x483D16, __brush::__asm_adjacency_winding);
 	}
 
-	Cmd_AddCommand("cm_showCollisionFilter", CM_ShowCollisionFilter);
+	CM_LoadDvars();
 
 	//Cmd_AddCommand("showconsole", CStaticConsoleGui::Toggle);
 	Sys_ResumeAllThreads();
