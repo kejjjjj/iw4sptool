@@ -60,6 +60,7 @@ void CG_Init() {
 		CStaticHooks::Create("R_CreateDeviceInternal", 0x50B3B0, R_CreateDeviceInternal);
 		CStaticHooks::Create("RB_DrawDebug", 0x5594C0, RB_DrawDebug);
 		CStaticHooks::Create("__asm_adjacency_winding", 0x483D16, __brush::__asm_adjacency_winding);
+		CStaticHooks::Create("CG_DrawFullScreenDebugOverlays", 0x4E2340, CG_DrawFullScreenDebugOverlays);
 	}
 
 	CM_LoadDvars();

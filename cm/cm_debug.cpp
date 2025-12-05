@@ -33,4 +33,6 @@ void CM_LoadDvars()
 	Dvar_RegisterBool("cm_onlyBounces", dvar_flags::saved, false, "Only display surfaces which can be bounced");
 	Dvar_RegisterBool("cm_onlyElevators", dvar_flags::saved, false, "Only display surfaces which can be elevated");
 
+	Dvar_RegisterBool("pm_coordinates", dvar_flags::saved, false, "show player coordinates");
+
 }

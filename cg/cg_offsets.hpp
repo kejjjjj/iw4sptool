@@ -10,4 +10,6 @@ inline struct GfxCmdBufState* gfxCmdBufState = reinterpret_cast<GfxCmdBufState*>
 inline struct r_global_permanent_t* rgp = reinterpret_cast<r_global_permanent_t*>(0x1C87E80);
 inline struct clipMap_t* cm = reinterpret_cast<clipMap_t*>(0x1446800);
 inline struct CmdArgs* cmd_args = reinterpret_cast<CmdArgs*>(0x144C950);
+inline struct level_locals_t* level = reinterpret_cast<level_locals_t*>(0x10A3C10);
+
 inline float* viewpos = reinterpret_cast<float*>(0x77FAE8);

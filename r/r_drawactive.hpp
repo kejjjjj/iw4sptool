@@ -1,3 +1,3 @@
 #pragma once
 
-void CG_DrawActive(int localClientNum);
+void CG_DrawFullScreenDebugOverlays(int localClientNum);

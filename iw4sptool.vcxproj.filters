@@ -55,6 +55,12 @@
     <Filter Include="Source Files\com">
       <UniqueIdentifier>{f88cbf83-926c-4ee9-9131-2a767683328e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\sl">
+      <UniqueIdentifier>{ae0a0f32-63ec-4f26-ae61-7dffa04b5a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\g">
+      <UniqueIdentifier>{d8b5d0ff-0eaf-4f4e-a609-1ce07e7d0490}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cm\cm_brush.hpp">
@@ -140,6 +146,12 @@
     </ClInclude>
     <ClInclude Include="cm\cm_terrain.hpp">
       <Filter>Source Files\cm</Filter>
+    </ClInclude>
+    <ClInclude Include="sl\sl_string.hpp">
+      <Filter>Source Files\sl</Filter>
+    </ClInclude>
+    <ClInclude Include="g\g_entity.hpp">
+      <Filter>Source Files\g</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +262,12 @@
     </ClCompile>
     <ClCompile Include="cm\cm_terrain.cpp">
       <Filter>Source Files\cm</Filter>
+    </ClCompile>
+    <ClCompile Include="sl\sl_string.cpp">
+      <Filter>Source Files\sl</Filter>
+    </ClCompile>
+    <ClCompile Include="g\g_entity.cpp">
+      <Filter>Source Files\g</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

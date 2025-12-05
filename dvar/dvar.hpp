@@ -82,7 +82,7 @@ struct dvar_s {
 [[nodiscard]] char* Dvar_DomainToString_Internal(size_t BufferCount, char* outBuffer, char type, DvarLimits domain, int* outLineCount);
 [[nodiscard]] std::string Dvar_DomainToString(char type, DvarLimits domain);
 
-[[maybe_unused]] dvar_s* Dvar_RegisterBool(const char* dvarName, bool value, int flags, const char* description);
+[[maybe_unused]] dvar_s* Dvar_RegisterBool(const char* dvarName, int flags, bool value, const char* description);
 [[maybe_unused]] dvar_s* Dvar_RegisterInt(const char* name, int value, int min, int max, int flags, const char* description);
 [[maybe_unused]] dvar_s* Dvar_RegisterFloat(const char* name, float value, float min, float max, int flags, const char* description);
 [[maybe_unused]] dvar_s* Dvar_RegisterEnum(const char* name, const char** valueList, int defaultIndex, int flags, const char* description);

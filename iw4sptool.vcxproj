@@ -161,6 +161,7 @@
     <ClInclude Include="com\com_channel.hpp" />
     <ClInclude Include="com\com_vector.hpp" />
     <ClInclude Include="dvar\dvar.hpp" />
+    <ClInclude Include="g\g_entity.hpp" />
     <ClInclude Include="in\in_main.hpp" />
     <ClInclude Include="r\backend\rb_endscene.hpp" />
     <ClInclude Include="r\gui\r_console.hpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="r\r_drawactive.hpp" />
     <ClInclude Include="r\r_drawtools.hpp" />
     <ClInclude Include="r\r_endscene.hpp" />
+    <ClInclude Include="sl\sl_string.hpp" />
     <ClInclude Include="sys\sys_thread.hpp" />
     <ClInclude Include="utils\defs.hpp" />
     <ClInclude Include="utils\engine.hpp" />
@@ -190,6 +192,7 @@
     <ClCompile Include="com\com_vector.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="dvar\dvar.cpp" />
+    <ClCompile Include="g\g_entity.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -211,6 +214,7 @@
     <ClCompile Include="r\r_drawactive.cpp" />
     <ClCompile Include="r\r_drawtools.cpp" />
     <ClCompile Include="r\r_endscene.cpp" />
+    <ClCompile Include="sl\sl_string.cpp" />
     <ClCompile Include="sys\sys_thread.cpp" />
     <ClCompile Include="utils\resolution.cpp" />
     <ClCompile Include="wnd\wndproc.cpp" />
