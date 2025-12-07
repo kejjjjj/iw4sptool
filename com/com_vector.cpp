@@ -130,3 +130,56 @@ void SetPlaneSignbits(cplane_s* out)
 	}
 	out->signbits = bits;
 }
+
+bool BoundsInView(const fvec3& mins, const fvec3& maxs, struct cplane_s* frustumPlanes, int numPlanes)
+{
+	if (numPlanes <= 0)
+		return true;
+
+	cplane_s* plane = frustumPlanes;
+	auto idx = 0;
+	while ((BoxOnPlaneSide(mins, maxs, plane++) & 1) != 0) {
+		if (++idx >= numPlanes)
+			return true;
+	}
+
+	return false;
+}
+
+fvec3 VectorRotate(const fvec3& vIn, const fvec3& vRotation)
+{
+	fvec3 vWork, va;
+	VectorCopy(vIn, va);
+	VectorCopy(va, vWork);
+	int nIndex[3][2] = {};
+	nIndex[0][0] = 1; nIndex[0][1] = 2;
+	nIndex[1][0] = 2; nIndex[1][1] = 0;
+	nIndex[2][0] = 0; nIndex[2][1] = 1;
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (vRotation[i] != 0.000000f)
+		{
+			float dAngle = vRotation[i] * PI / 180.0f;
+			float c = cos(dAngle);
+			float s = sin(dAngle);
+			vWork[nIndex[i][0]] = va[nIndex[i][0]] * c - va[nIndex[i][1]] * s;
+			vWork[nIndex[i][1]] = va[nIndex[i][0]] * s + va[nIndex[i][1]] * c;
+		}
+		VectorCopy(vWork, va);
+	}
+
+	return vWork;
+}
+fvec3 VectorRotate(const fvec3& vIn, const fvec3& vRotation, const fvec3& vOrigin)
+{
+	fvec3 vRotation2 = vRotation;
+	std::swap(vRotation2.y, vRotation2.z);
+	std::swap(vRotation2.x, vRotation2.y);
+
+	fvec3 vTemp;
+	VectorSubtract(vIn, vOrigin, vTemp);
+	fvec3 vTemp2 = VectorRotate(vTemp, vRotation2);
+
+	return vTemp2 + vOrigin;
+}

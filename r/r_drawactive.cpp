@@ -6,6 +6,9 @@
 #include "r_drawtools.hpp"
 #include "utils/hook.hpp"
 #include "dvar/dvar.hpp"
+#include "cm/cm_cgentities.hpp"
+#include "cm/cm_entity.hpp"
+
 #include <windows.h>
 
 static void CG_DrawCoordinates(float& y, const vec4_t color)
@@ -25,7 +28,8 @@ static void CG_DrawCoordinates(float& y, const vec4_t color)
 void CG_DrawFullScreenDebugOverlays(int localClientNum) {
 
 	static dvar_s* pm_coordinates = Dvar_FindMalleableVar("pm_coordinates");
-
+	static dvar_s* cm_entityInfo = Dvar_FindMalleableVar("cm_entityInfo");
+	static dvar_s* cm_showCollisionDist = Dvar_FindMalleableVar("cm_showCollisionDist");
 
 	//CG_CornerDebugPrint("Hello!", vec4_t{ 1,1,1,1 }, Scr_GetPlacement(), 100.f, 100.f);
 
@@ -38,4 +42,13 @@ void CG_DrawFullScreenDebugOverlays(int localClientNum) {
 
 	if (pm_coordinates && pm_coordinates->current.enabled) 
 		CG_DrawCoordinates(y, color);
+
+
+	if (cm_showCollisionDist && cm_entityInfo && cm_entityInfo->current.integer) {
+
+		CGentities::ForEach([](GentityPtr_t& ptr) {
+			ptr->CG_Render2D(cm_showCollisionDist->current.value, static_cast<entity_info_type>(cm_entityInfo->current.integer));
+		});
+
+	}
 }

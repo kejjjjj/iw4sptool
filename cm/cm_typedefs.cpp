@@ -31,7 +31,7 @@ cm_brush::~cm_brush() = default;
 
 bool cm_brush::RB_MakeInteriorsRenderable(const cm_renderinfo& info) const
 {
-	if (info.only_colliding && (m_brush->content & MASK_PLAYERSOLID) == 0)
+	if (info.only_colliding && (m_brush.content & MASK_PLAYERSOLID) == 0)
 		return false;
 
 	if (m_origin.dist(viewpos) > info.draw_dist)
@@ -85,7 +85,7 @@ bool cm_brush::RB_MakeInteriorsRenderable(const cm_renderinfo& info) const
 bool cm_brush::RB_MakeOutlinesRenderable(const cm_renderinfo& info, int& nverts) const
 {
 
-	if (info.only_colliding && (m_brush->content & MASK_PLAYERSOLID) == 0)
+	if (info.only_colliding && (m_brush.content & MASK_PLAYERSOLID) == 0)
 		return false;
 
 	if (m_origin.dist(viewpos) > info.draw_dist)

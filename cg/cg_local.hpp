@@ -1406,6 +1406,13 @@ struct LerpEntityStateTurret
 	bool isHeatingUp;
 	bool isBeingCarried;
 };
+
+union LerpEntityStateTypeUnion
+{
+	LerpEntityStateTurret turret;
+	char pad0[36];
+};
+
 struct LerpEntityState
 {
 	int eFlags;
@@ -1414,11 +1421,7 @@ struct LerpEntityState
 	LerpEntityStateTypeUnion u;
 };
 
-union LerpEntityStateTypeUnion
-{
-	LerpEntityStateTurret turret;
-	char pad0[36];
-};
+
 union $C889CF518587CB2833BFE41358FA5E4A
 {
 	int brushmodel;
@@ -1431,7 +1434,28 @@ struct EntHandle
 	unsigned __int16 number;
 	unsigned __int16 infoIndex;
 };
-
+enum entityType_t
+{
+	ET_GENERAL = 0x0,
+	ET_PLAYER = 0x1,
+	ET_PLAYER_CORPSE = 0x2,
+	ET_ITEM = 0x3,
+	ET_MISSILE = 0x4,
+	ET_INVISIBLE = 0x5,
+	ET_SCRIPTMOVER = 0x6,
+	ET_SOUND_BLEND = 0x7,
+	ET_FX = 0x8,
+	ET_LOOP_FX = 0x9,
+	ET_PRIMARY_LIGHT = 0xA,
+	ET_TURRET = 0xB,
+	ET_HELICOPTER = 0xC,
+	ET_PLANE = 0xD,
+	ET_VEHICLE = 0xE,
+	ET_VEHICLE_COLLMAP = 0xF,
+	ET_VEHICLE_CORPSE = 0x10,
+	ET_VEHICLE_SPAWNER = 0x11,
+	ET_EVENTS = 0x12,
+};
 struct entityState_s
 {
 	unsigned __int8 eType;
@@ -1439,8 +1463,8 @@ struct entityState_s
 	unsigned __int8 weapon;
 	unsigned __int8 weaponModel;
 	entityState_sndwait un1;
-	LerpEntityState lerp;
 	unsigned int eventParm;
+	LerpEntityState lerp;
 	unsigned __int16 loopSound;
 	unsigned __int16 number;
 	unsigned __int16 otherEntityNum;
@@ -1526,11 +1550,10 @@ struct gentity_s
 	unsigned __int16 attachModelNames[31];
 	unsigned __int16 attachTagNames[31];
 	unsigned __int16 disconnectedLinks;
-	int iDisconnectTime;
-	float angleLerpRate;
-	struct XAnimTree_s* pAnimTree;
 	struct gentity_s* nextFree;
 };
+static_assert(sizeof(gentity_s) == 624);
+
 struct SpawnVar
 {
 	bool spawnVarsValid;
@@ -1652,3 +1675,81 @@ struct level_locals_t
 	float mapSunColor[3];
 	float mapSunDirection[3];
 };
+
+enum fieldtype_t : __int32
+{
+	F_INT = 0x0,
+	F_SHORT = 0x1,
+	F_BYTE = 0x2,
+	F_FLOAT = 0x3,
+	F_STRING = 0x4,
+	F_VECTOR = 0x5,
+	F_ENTITY = 0x6,
+	F_ENTHANDLE = 0x7,
+	F_ACTOR = 0x8,
+	F_SENTIENT = 0x9,
+	F_SENTIENTHANDLE = 0xA,
+	F_CLIENT = 0xB,
+	F_PATHNODE = 0xC,
+	F_VECTORHACK = 0xD,
+	F_MODEL = 0xE,
+	F_ACTORGROUP = 0xF,
+};
+
+struct ent_field_t
+{
+	const char* name;
+	int ofs;
+	fieldtype_t type;
+	void (*setter)(gentity_s*, int);
+	void (*getter)(gentity_s*, int);
+};
+
+struct RefdefView
+{
+	float tanHalfFovX;
+	float tanHalfFovY;
+	float org[3];
+	float axis[3][3];
+	float zNear;
+};
+struct GfxLight
+{
+	char type;
+	char canUseShadowMap;
+	char unused[2];
+	float color[3];
+	float dir[3];
+	float origin[3];
+	float radius;
+	float cosHalfFovOuter;
+	float cosHalfFovInner;
+	int exponent;
+	unsigned int spotShadowIndex;
+	struct GfxLightDef* def;
+};
+struct refdef_t
+{
+	unsigned int x;
+	unsigned int y;
+	unsigned int width;
+	unsigned int height;
+	RefdefView view;
+	float viewOffset[3];
+	int time;
+	float blurRadius;
+	GfxDepthOfField dof;
+	GfxFilm film;
+	GfxGlow glow;
+	GfxLightScale charPrimaryLightScale;
+	GfxCompositeFx waterSheetingFx;
+	GfxLight primaryLights[248];
+	GfxViewport scissorViewport;
+	bool useScissorViewport;
+	bool viewModelHasDistortion;
+	char forceSunShadowsGenerate;
+	bool halfResParticles;
+	bool playerTeleported;
+	int localClientNum;
+};
+

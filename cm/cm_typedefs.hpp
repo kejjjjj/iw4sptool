@@ -2,6 +2,7 @@
 
 #include "utils/vec.hpp"
 #include "utils/defs.hpp"
+#include "cm_brush.hpp"
 
 #include <memory>
 #include <unordered_set>
@@ -115,11 +116,9 @@ struct cm_brush;
 struct cm_terrain;
 
 struct cm_geometry {
-	NONCOPYABLE(cm_geometry);
-
 	cm_geometry() = default;
 	virtual ~cm_geometry() = default;
-	virtual constexpr cm_geomtype Type() const noexcept = 0;
+	[[nodiscard]] virtual constexpr cm_geomtype Type() const noexcept = 0;
 
 	[[nodiscard]] virtual const cm_brush* AsBrush() const noexcept { return nullptr; }
 	[[nodiscard]] virtual const cm_terrain* AsTerrain() const noexcept { return nullptr; }
@@ -139,20 +138,20 @@ struct cbrush;
 
 struct cm_brush final : public cm_geometry
 {
+	friend class CBrushModel;
+
 	cm_brush();
 	~cm_brush();
 
-	NONCOPYABLE(cm_brush);
-
 	friend void __cdecl adjacency_winding(adjacencyWinding_t* w, float* points, vec3_t normal);
 
-	cm_geomtype Type() const noexcept override { return cm_geomtype::brush; }
+	[[nodiscard]] cm_geomtype Type() const noexcept override { return cm_geomtype::brush; }
 	[[nodiscard]] const cm_brush* AsBrush() const noexcept override { return this; }
 
 	[[nodiscard]] bool RB_MakeInteriorsRenderable(const cm_renderinfo& info) const override;
 	[[nodiscard]] bool RB_MakeOutlinesRenderable(const cm_renderinfo& info, int& nverts) const override;
 
-	std::unique_ptr<cbrush> m_brush;
+	cbrush m_brush;
 protected:
 private:
 
@@ -164,12 +163,12 @@ using Triangles = std::vector<cm_triangle>;
 struct cLeaf_t;
 struct cm_terrain final : public cm_geometry
 {
+	friend class CBrushModel;
+
 	cm_terrain(const cLeaf_t* _leaf, std::vector<Triangles>&& _tris);
 	~cm_terrain();
 
-	NONCOPYABLE(cm_terrain);
-
-	cm_geomtype Type() const noexcept override { return cm_geomtype::terrain; }
+	[[nodiscard]] cm_geomtype Type() const noexcept override { return cm_geomtype::terrain; }
 	[[nodiscard]] const cm_terrain* AsTerrain() const noexcept override { return this; }
 
 	[[nodiscard]] bool RB_MakeInteriorsRenderable(const cm_renderinfo& info) const override;

@@ -5,6 +5,7 @@
 
 struct cbrush_t;
 struct cbrush {
+	cbrush() = default;
 	cbrush(const cbrush_t* _b, const struct Bounds* _bounds, int _content);
 	const cbrush_t* b;
 	fvec3 mins, maxs;

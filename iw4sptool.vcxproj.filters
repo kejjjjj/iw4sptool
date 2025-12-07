@@ -153,6 +153,15 @@
     <ClInclude Include="g\g_entity.hpp">
       <Filter>Source Files\g</Filter>
     </ClInclude>
+    <ClInclude Include="cm\cm_entity.hpp">
+      <Filter>Source Files\cm</Filter>
+    </ClInclude>
+    <ClInclude Include="cm\cm_cgentities.hpp">
+      <Filter>Source Files\cm</Filter>
+    </ClInclude>
+    <ClInclude Include="g\g_spawn.hpp">
+      <Filter>Source Files\g</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -267,6 +276,15 @@
       <Filter>Source Files\sl</Filter>
     </ClCompile>
     <ClCompile Include="g\g_entity.cpp">
+      <Filter>Source Files\g</Filter>
+    </ClCompile>
+    <ClCompile Include="cm\cm_entity.cpp">
+      <Filter>Source Files\cm</Filter>
+    </ClCompile>
+    <ClCompile Include="cm\cm_cgentities.cpp">
+      <Filter>Source Files\cm</Filter>
+    </ClCompile>
+    <ClCompile Include="g\g_spawn.cpp">
       <Filter>Source Files\g</Filter>
     </ClCompile>
   </ItemGroup>

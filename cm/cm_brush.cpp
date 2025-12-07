@@ -11,6 +11,7 @@
 
 #include <print>
 #include <ranges>
+#include <algorithm>
 
 cbrush::cbrush(const cbrush_t* _b, const Bounds* _bounds, int _content) : b(_b),
 	mins(fvec3(_bounds->midPoint) - fvec3(_bounds->halfSize)),
@@ -56,16 +57,7 @@ void CM_LoadAllBrushWindingsToClipMapWithFilter(const std::string& filter)
 		cbrush b(&cm->brushes[i], &cm->brushBounds[i], cm->brushContents[i]);
 		const auto materials = CM_GetBrushMaterials(b);
 
-		bool yes = {};
-
-		for (const auto& material : materials) {
-			if (CM_IsMatchingFilter(filters, material.c_str())) {
-				yes = true;
-				break;
-			}
-		}
-
-		if (!yes)
+		if (!std::ranges::any_of(materials, [&filters](const std::string& v) {  return CM_IsMatchingFilter(filters, v.c_str()); }))
 			continue;
 
 		CM_LoadBrushWindingsToClipMap(b);
@@ -99,7 +91,7 @@ std::unique_ptr<cm_geometry> CM_GetBrushPoints(const cbrush& b, const fvec3& pol
 
 	auto c_brush = dynamic_cast<cm_brush*>(CClipMap::m_pWipGeometry.get());
 
-	c_brush->m_brush = std::make_unique<cbrush>(b);
+	c_brush->m_brush = cbrush(b);
 
 	c_brush->m_origin = b.mins + ((b.maxs - b.mins) / 2);
 	c_brush->m_mins = b.mins;
@@ -319,7 +311,7 @@ void __cdecl adjacency_winding(adjacencyWinding_t* w, float* points, vec3_t norm
 	}
 
 	auto brush = dynamic_cast<cm_brush*>(CClipMap::m_pWipGeometry.get());
-	tri.material = CM_MaterialForNormal(brush->m_brush->b, normal);
+	tri.material = CM_MaterialForNormal(brush->m_brush.b, normal);
 
 	brush->m_triangles.emplace_back(tri);
 

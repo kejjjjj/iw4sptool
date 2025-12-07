@@ -41,7 +41,7 @@ std::string Dvar_DomainToString(char type, DvarLimits domain) {
 }
 
 dvar_s* Dvar_RegisterBool(const char* dvarName, int flags, bool value, const char* description){
-	return Engine::Tools::Call<dvar_s*>(0x4866B0, dvarName, flags, value, description);
+	return Engine::Tools::Call<dvar_s*>(0x4866B0, dvarName, value, flags, description);
 }
 dvar_s* Dvar_RegisterInt(const char* name, int value, int min, int max, int flags, const char* description){
 	return Engine::Tools::Call<dvar_s*>(0x423710, name, value, min, max, flags, description);

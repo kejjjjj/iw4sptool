@@ -1,24 +1,26 @@
-#include "cm_renderer.hpp"
-#include "utils/vec.hpp"
-#include "r/backend/rb_endscene.hpp"
 #include "cg/cg_local.hpp"
 #include "cg/cg_offsets.hpp"
-#include "utils/defs.hpp"
 #include "cm/cm_clipmap.hpp"
 #include "cm/cm_typedefs.hpp"
+#include "cm_cgentities.hpp"
 #include "cm_debug.hpp"
+#include "cm_renderer.hpp"
 #include "com/com_channel.hpp"
 #include "com/com_vector.hpp"
 #include "dvar/dvar.hpp"
+#include "r/backend/rb_endscene.hpp"
+#include "utils/defs.hpp"
+#include "utils/vec.hpp"
+#include "cm_entity.hpp"
 
 #include <algorithm>
-#include <ranges>
 #include <print>
+#include <ranges>
 #include <windows.h>
 
 void CM_ShowCollision()
 {
-	if (CClipMap::Size() == 0)
+	if (CClipMap::Size() == 0 && CGentities::Size() == 0)
 		return;
 
 	cplane_s frustum_planes[6];
@@ -63,7 +65,21 @@ void CM_ShowCollision()
 				}
 			}
 
-			});
+		});
+
+		std::unique_lock<std::mutex> gentLock(CGentities::GetLock());
+
+		CGentities::ForEach([&render_info](const GentityPtr_t& gent) {
+
+			auto numVerts = gent->GetNumVerts();
+			if (RB_CheckTessOverflow(numVerts, 3 * (numVerts - 2)))
+				RB_TessOverflow(true, render_info.depth_test);
+
+			if (gent->RB_MakeInteriorsRenderable(render_info)) {
+				CGDebugData::tessVerts += numVerts;
+				CGDebugData::tessIndices += 3 * (numVerts - 2);
+			}
+		});
 
 		RB_EndTessSurface();
 	}
@@ -79,6 +95,23 @@ void CM_ShowCollision()
 					CGDebugData::tessVerts += poly->m_numVerts;
 					CGDebugData::tessIndices += 3 * (poly->m_numVerts - 2);
 				}
+			}
+		});
+
+		std::unique_lock<std::mutex> gentLock(CGentities::GetLock());
+
+		const auto showConnections = Dvar_FindMalleableVar("cm_entityConnections")->current.enabled;
+
+		CGentities::ForEach([&](const GentityPtr_t& gent) {
+			auto numVerts = gent->GetNumVerts();
+
+			if (gent->RB_MakeOutlinesRenderable(render_info, vert_count)) {
+				CGDebugData::tessVerts += numVerts;
+				CGDebugData::tessIndices += 3 * (numVerts - 2);
+			}
+
+			if (showConnections) {
+				gent->RB_RenderConnections(render_info, vert_count);
 			}
 		});
 

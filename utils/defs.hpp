@@ -20,6 +20,12 @@ typedef vec_t vec4_t[4];
 #define	VectorMA(v, s, b, o)	((o)[0]=(v)[0]+(b)[0]*(s),(o)[1]=(v)[1]+(b)[1]*(s),(o)[2]=(v)[2]+(b)[2]*(s))
 #define VectorClear( a )              ( ( a )[0] = ( a )[1] = ( a )[2] = 0 )
 
+#define PI 3.14159265f
+
+#ifndef M_PI
+#define M_PI        3.14159265358979323846f // matches value in gcc v2 math.h
+#endif
+
 #ifndef NONCOPYABLE
 #define NONCOPYABLE(TypeName) \
 	TypeName(TypeName&&) = delete; \

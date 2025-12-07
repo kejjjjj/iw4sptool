@@ -17,6 +17,7 @@
 #include "wnd/wndproc.hpp"
 #include "r/gui/r_console.hpp"
 #include "cm/cm_debug.hpp"
+#include "g/g_entity.hpp"
 
 using namespace std::chrono_literals;
 
@@ -61,6 +62,8 @@ void CG_Init() {
 		CStaticHooks::Create("RB_DrawDebug", 0x5594C0, RB_DrawDebug);
 		CStaticHooks::Create("__asm_adjacency_winding", 0x483D16, __brush::__asm_adjacency_winding);
 		CStaticHooks::Create("CG_DrawFullScreenDebugOverlays", 0x4E2340, CG_DrawFullScreenDebugOverlays);
+		//CStaticHooks::Create("InitTrigger", 0x5DB6D0, InitTrigger);
+
 	}
 
 	CM_LoadDvars();

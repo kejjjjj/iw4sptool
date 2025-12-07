@@ -1,3 +1,7 @@
+#pragma once
+
+#include "utils/defs.hpp"
+
 #include <unordered_set>
 #include <string>
 #include <memory>
@@ -17,5 +21,5 @@ void CM_LoadAllTerrainToClipMapWithFilter(const std::string& filter);
 [[maybe_unused]] bool CM_DiscoverTerrain(const std::unordered_set<std::string>& filters);
 [[nodiscard]] bool CM_TriangleInView(const cm_triangle* leaf, struct cplane_s* frustumPlanes, int numPlanes = 5);
 
-[[nodiscard]] std::unique_ptr<cm_terrain> CM_TerrainFromLeaf(const cLeaf_t* leaf, const std::unordered_set<std::string>& filters);
+[[nodiscard]] std::unique_ptr<cm_terrain> CM_TerrainFromLeaf(const cLeaf_t* leaf, const std::unordered_set<std::string>& filters, const vec4_t color = vec4_t{ 0,0.1f,1.f, 0.8f });
 [[nodiscard]] std::vector<cm_triangle> CM_AdvanceAabbTree(const CollisionAabbTree* aabbTree, const std::unordered_set<std::string>& filters, const float* color);

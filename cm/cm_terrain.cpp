@@ -43,7 +43,7 @@ bool CM_DiscoverTerrain(const std::unordered_set<std::string>& filters)
 	}
 }
 
-std::unique_ptr<cm_terrain> CM_TerrainFromLeaf(const cLeaf_t* leaf, const std::unordered_set<std::string>& filters)
+std::unique_ptr<cm_terrain> CM_TerrainFromLeaf(const cLeaf_t* leaf, const std::unordered_set<std::string>& filters, const vec4_t color)
 {
 	if (!leaf || !leaf->collAabbCount)
 		return nullptr;
@@ -55,7 +55,7 @@ std::unique_ptr<cm_terrain> CM_TerrainFromLeaf(const cLeaf_t* leaf, const std::u
 	do {
 		const CollisionAabbTree* aabb = &cm->aabbTrees[aabbIdx + leaf->firstCollAabbIndex];
 
-		if(const auto&& tri = CM_AdvanceAabbTree(aabb, filters, vec4_t{ 0,0.1f,1.f, 0.8f }); !tri.empty())
+		if(const auto&& tri = CM_AdvanceAabbTree(aabb, filters, color); !tri.empty())
 			tris.emplace_back(tri);
 
 		++aabbIdx;

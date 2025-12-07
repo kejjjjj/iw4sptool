@@ -5,6 +5,7 @@
 #include "utils/engine.hpp"
 #include "cg/cg_offsets.hpp"
 #include <cstdint>
+#include <algorithm>
 
 
 void CG_AdjustFrom640(float& x, float& y, float& w, float& h)
@@ -76,4 +77,46 @@ void CG_CornerDebugPrint(const char* text, float* color, const ScreenPlacement* 
 }
 ScreenPlacement* Scr_GetPlacement() {
 	return Engine::Tools::Call<ScreenPlacement*>(0x448A30, 0); // 0 is for clientnum
+}
+
+std::optional<fvec2> WorldToScreen(const fvec3& location)
+{
+	constexpr int centerX = 640 / 2;
+	constexpr int centerY = 480 / 2;
+
+	const fvec3 vright = refdef->view.axis[1];
+	const fvec3 vup = refdef->view.axis[2];
+	const fvec3 vfwd = refdef->view.axis[0];
+
+
+	const fvec3 vLocal = location - refdef->view.org;
+	fvec3 vTransform;
+
+	vTransform.x = vLocal.dot(vright);
+	vTransform.y = vLocal.dot(vup);
+	vTransform.z = vLocal.dot(vfwd);
+
+	if (vTransform.z < 0.01) {
+		return std::nullopt;
+	}
+	fvec2 out;
+
+	out.x = static_cast<float>(centerX) * (1.f - (vTransform.x / refdef->view.tanHalfFovX / vTransform.z));
+	out.y = static_cast<float>(centerY) * (1.f - (vTransform.y / refdef->view.tanHalfFovY / vTransform.z));
+
+	if (vTransform.z > 0)
+		return out;
+
+	return std::nullopt;
+}
+float R_ScaleByDistance(float dist)
+{
+	float d_max = 10000.0;
+	float scale_max = 7.f;
+
+	dist = std::max(0.0f, std::min(d_max, dist));
+
+	float scale = 2.f - scale_max * (dist / (d_max));
+
+	return std::clamp(scale, 0.1f, 2.f);
 }
