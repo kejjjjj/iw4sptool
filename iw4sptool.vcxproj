@@ -151,6 +151,7 @@
     <ClInclude Include="cg\cg_init.hpp" />
     <ClInclude Include="cg\cg_local.hpp" />
     <ClInclude Include="cg\cg_offsets.hpp" />
+    <ClInclude Include="cl\cl_main.hpp" />
     <ClInclude Include="cmd\cmd.hpp" />
     <ClInclude Include="cm\cm_brush.hpp" />
     <ClInclude Include="cm\cm_cgentities.hpp" />
@@ -184,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cg\cg_init.cpp" />
+    <ClCompile Include="cl\cl_main.cpp" />
     <ClCompile Include="cmd\cmd.cpp" />
     <ClCompile Include="cm\cm_brush.cpp" />
     <ClCompile Include="cm\cm_cgentities.cpp" />

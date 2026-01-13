@@ -9,7 +9,7 @@
 volatile int CGDebugData::tessVerts{};
 volatile int CGDebugData::tessIndices{};
 GfxPointVertex CGDebugData::g_debugPolyVerts[2725];
-
+CGDebugData::TriggerData CGDebugData::currentTrigger{};
 
 void CM_LoadDvars()
 {
@@ -40,6 +40,8 @@ void CM_LoadDvars()
 
 	Dvar_RegisterBool("cm_onlyBounces", dvar_flags::none, false, "Only display surfaces which can be bounced");
 	Dvar_RegisterBool("cm_onlyElevators", dvar_flags::none, false, "Only display surfaces which can be elevated");
+
+	Dvar_RegisterBool("cm_triggerDisable", dvar_flags::none, false, "Triggers will not have any effect");
 
 	Dvar_RegisterBool("pm_coordinates", dvar_flags::saved, false, "show player coordinates");
 

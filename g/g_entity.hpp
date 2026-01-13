@@ -3,4 +3,4 @@
 
 void Cmd_ShowEntities_f();
 
-char InitTrigger(struct gentity_s* g);
+void G_Trigger(struct gentity_s* self, gentity_s* other);

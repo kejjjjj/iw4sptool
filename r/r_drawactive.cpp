@@ -8,8 +8,31 @@
 #include "dvar/dvar.hpp"
 #include "cm/cm_cgentities.hpp"
 #include "cm/cm_entity.hpp"
+#include "cm/cm_debug.hpp"
 
 #include <windows.h>
+#include <sstream>
+
+static void CG_DrawTrigger(float& y, const vec4_t color)
+{
+	auto& trigger = CGDebugData::currentTrigger;
+
+	if (!trigger.ent) 
+		return;
+	
+	std::stringstream ss;
+
+	for (auto& [k, v] : trigger.m_oEntityFields)
+		ss << k << ": " << v << '\n';
+
+	auto asStr = ss.str();
+
+	if (asStr.length()) {
+		R_DrawTextWithEffects(asStr.c_str(), "fonts/bigdevfont", 0, y, 0.4f, 0.45f, 0, color, 3, vec4_t{ 1,0,0,0 });
+		y += 10 * trigger.m_oEntityFields.size();
+	}
+
+}
 
 static void CG_DrawCoordinates(float& y, const vec4_t color)
 {
@@ -43,6 +66,7 @@ void CG_DrawFullScreenDebugOverlays(int localClientNum) {
 	if (pm_coordinates && pm_coordinates->current.enabled) 
 		CG_DrawCoordinates(y, color);
 
+	CG_DrawTrigger(y, color);
 
 	if (cm_showCollisionDist && cm_entityInfo && cm_entityInfo->current.integer) {
 

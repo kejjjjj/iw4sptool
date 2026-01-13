@@ -8,6 +8,7 @@
 #include "cm_debug.hpp"
 #include "r/backend/rb_endscene.hpp"
 #include "r/r_drawtools.hpp"
+#include "sl/sl_string.hpp"
 
 #include <cassert>
 #include <ranges>
@@ -26,9 +27,10 @@ bool CGameEntity::IsBrushModel() const noexcept
 	assert(m_pOwner != nullptr);
 	return m_pOwner->classname == *scr_const_script_brushmodel;
 }
-
 void CGameEntity::ParseEntityFields()
 {
+	G_ResetEntityParsePoint(); 
+
 	const auto spawnVar = G_GetGentitySpawnVars(m_pOwner);
 
 	if (!spawnVar)
@@ -68,8 +70,11 @@ void CGameEntity::GenerateConnections(const LevelGentities_t& lgentities)
 
 std::unique_ptr<CGameEntity> CGameEntity::CreateEntity(gentity_s* const g)
 {
+	const auto classname = SL_ConvertToString(g->classname);
+	const auto script_brushmodel = *reinterpret_cast<int16_t*>(0x12CC022);
+
 	//mw2 equivelant to g->r.bmodel
-	if (g->s.pad[1] == 1 && g->s.pad[1] < 5 || g->r.contents) {
+	if (g->classname == script_brushmodel || std::string(classname).starts_with("trigger")) {
 		auto&& p = std::make_unique<CBrushModel>(g);
 
 		if (p->HasBrushModels())
@@ -126,7 +131,7 @@ void CGameEntity::CG_Render2D(float drawDist, entity_info_type entType) const
 
 	if (auto op = WorldToScreen(center)) {
 		const float scale = R_ScaleByDistance(distance) * 0.15f;
-		R_DrawTextWithEffects(buff, "fonts/bigdevFont", op->x, op->y, scale, scale, 0.f, vec4_t{ 1,1,1,1 }, 5, vec4_t{ 1,0,0,0 });
+		R_DrawTextWithEffects(buff, "fonts/bigdevfont", op->x, op->y, scale, scale, 0.f, vec4_t{ 1,1,1,1 }, 5, vec4_t{ 1,0,0,0 });
 	}
 
 }

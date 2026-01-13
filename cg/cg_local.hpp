@@ -1476,7 +1476,10 @@ struct entityState_s
 	unsigned __int8 events[4];
 	unsigned int eventParms[4];
 	unsigned __int8 un2[4];
-	char pad[4];
+	char isLinked;
+	char modelType;
+	char svFlags;
+	char isInUse;
 };
 struct entityShared_t
 {
@@ -1520,8 +1523,8 @@ struct gentity_s
 	unsigned __int8 nopickup;
 	unsigned __int16 model;
 	unsigned __int8 handler;
-	unsigned __int16 classname;
 	unsigned __int16 script_linkName;
+	unsigned __int16 classname;
 	unsigned __int16 script_noteworthy;
 	unsigned __int16 target;
 	unsigned __int16 targetname;
@@ -1705,14 +1708,7 @@ struct ent_field_t
 	void (*getter)(gentity_s*, int);
 };
 
-struct RefdefView
-{
-	float tanHalfFovX;
-	float tanHalfFovY;
-	float org[3];
-	float axis[3][3];
-	float zNear;
-};
+
 struct GfxLight
 {
 	char type;
@@ -1727,6 +1723,14 @@ struct GfxLight
 	int exponent;
 	unsigned int spotShadowIndex;
 	struct GfxLightDef* def;
+};
+struct RefdefView
+{
+	float tanHalfFovX;
+	float tanHalfFovY;
+	float org[3];
+	float axis[3][3];
+	float zNear;
 };
 struct refdef_t
 {

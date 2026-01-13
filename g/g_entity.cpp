@@ -4,9 +4,12 @@
 #include "cm/cm_cgentities.hpp"
 #include "com/com_channel.hpp"
 #include "dvar/dvar.hpp"
+#include "cm/cm_debug.hpp"
+#include "cm/cm_entity.hpp"
 
 #include <string>
 #include <ranges>
+
 
 void Cmd_ShowEntities_f()
 {
@@ -37,22 +40,22 @@ void Cmd_ShowEntities_f()
 }
 
 #include "utils/hook.hpp"
-char InitTrigger([[maybe_unused]]struct gentity_s* g)
-{
-	gentity_s* p{};
-	__asm mov p, esi;
-	if (const auto f = CStaticHooks::FindByName("InitTrigger")) {
-		const auto _ptr = f->trampoline;
+void G_Trigger(gentity_s* self, gentity_s* other){
 
-		__asm {
-			mov esi, p;
-			call _ptr;
-			retn;
-		}
-
+	if (const auto dvar = Dvar_FindMalleableVar("cm_triggerDisable"); dvar && dvar->current.enabled) {
+		return;
 	}
-	__asm {
-		mov al, 0;
-		retn;
+
+	if (other != CGDebugData::currentTrigger.ent) {
+		CGDebugData::currentTrigger.ent = other;
+		CGDebugData::currentTrigger.m_oEntityFields.clear();
+
+		if (auto data = CGameEntity::CreateEntity(other)) {
+			CGDebugData::currentTrigger.m_oEntityFields = data->m_oEntityFields;
+		}
+	}
+
+	if (const auto f = CStaticHooks::FindByName("G_Trigger")) {
+		return f->Call<void>(self, other);
 	}
 }

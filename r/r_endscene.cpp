@@ -54,7 +54,7 @@ void R_RecoverLostDevice()
 		ImGui_ImplDX9_InvalidateDeviceObjects();
 	}
 }
-void R_Shutdown() {
+void CL_InitRef() {
 
 	CStaticMainGui::Close();
 	CStaticConsoleGui::Close();
@@ -68,7 +68,7 @@ void R_Shutdown() {
 		ImGui::SetCurrentContext(nullptr);
 	}
 
-	if (const auto f = CStaticHooks::FindByName("R_Shutdown")) {
+	if (const auto f = CStaticHooks::FindByName("CL_InitRef")) {
 		return f->Call<void>(CC::Cdecl);
 	}
 }

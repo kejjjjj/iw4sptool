@@ -74,7 +74,7 @@ public:
             std::make_unique<hook_t>(reinterpret_cast<void*>(target), reinterpret_cast<void*>(detour)) });
 
         if (inserted) {
-            std::print("install!");
+            std::print("install -> ({})\n", name);
             const auto& [_, hook] = *it;
             return hook->Install();
         }

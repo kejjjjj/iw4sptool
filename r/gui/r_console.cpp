@@ -234,12 +234,12 @@ void CConsoleGui::DrawConsoleInput(float w)
 void CConsoleGui::DrawSuggestions() {
 	const float key_width = static_cast<float>(adjust_from_640(180.0f));
 
-	auto Row = [&](const char* key, const char* value) {
+	auto Row = [&](const char* key, const char* value, const ImVec4 color={1,1,1,1}) {
 		ImGui::AlignTextToFramePadding();
-		ImGui::TextUnformatted(key);
+		ImGui::TextColored(color, key);
 
 		ImGui::SameLine(key_width);
-		ImGui::TextUnformatted(value);
+		ImGui::TextColored(color, value);
 	};
 
 	if (m_suggestions.size() == 1) {
@@ -259,7 +259,7 @@ void CConsoleGui::DrawSuggestions() {
 	for (const auto& s : m_suggestions) {
 
 		if (s.m_callback)
-			Row(std::get<1>(s.m_suggestion).c_str(), "");
+			Row(std::get<1>(s.m_suggestion).c_str(), "", ImVec4{ 0.7f, 0.8f, 1.f,1.f});
 		else {
 			const auto d = std::get<0>(s.m_suggestion);
 			Row(d->name, Dvar_ValueToString(d, d->current));

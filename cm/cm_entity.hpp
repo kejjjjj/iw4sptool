@@ -30,6 +30,7 @@ enum class entity_info_type
 class CGameEntity
 {
 	friend class CGentities;
+	friend void G_Trigger(gentity_s* self, gentity_s* other);
 public:
 
 	CGameEntity(gentity_s* const g);

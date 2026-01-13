@@ -36,9 +36,11 @@ void Cmd_AddCommand(const char* cmdname, void(__cdecl* function)())
     if (cmd)
         return;
 
-    static std::vector<cmd_function_s> cmds;
-    cmds.push_back({});
-    Cmd_AddCommandInternal(cmdname, function, &cmds.back(), 1);
+    static cmd_function_s cmds[64];
+    static std::uint8_t index = 0;
+    cmd = &cmds[index++];
+
+    Cmd_AddCommandInternal(cmdname, function, cmd, 1);
 }
 
 void Cbuf_AddText(const char* text, int localClientNum)

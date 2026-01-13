@@ -29,7 +29,7 @@ namespace Engine::Tools {
 
     template<Addr A>
     [[maybe_unused]] bool WriteBytes(A dst, const std::string_view& bytes) {
-        unsigned long oldProtect = {};
+        DWORD oldProtect = {};
         const auto size = bytes.length();
         if (VirtualProtect(reinterpret_cast<void*>(dst), size, PAGE_EXECUTE_READWRITE, &oldProtect)) {
             memcpy_s(reinterpret_cast<void*>(dst), size, bytes.data(), size);

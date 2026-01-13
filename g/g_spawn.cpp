@@ -33,8 +33,10 @@ SpawnVar* G_GetGentitySpawnVars(const gentity_s* gent)
 	auto parsed = false;
 
 	while (parsed = G_ParseSpawnVars(var), parsed) {
-		if (G_GetSpawnItemIndex(gent))
+		if (G_GetSpawnItemIndex(gent)) {
+			//std::print("G_GetSpawnItemIndex(): {}\n", SL_ConvertToString(gent->classname));
 			break;
+		}
 	};
 
 	return parsed ? var : nullptr;

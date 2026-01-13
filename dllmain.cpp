@@ -4,7 +4,7 @@
 
 #include "cg/cg_init.hpp"
 
-#define USE_CONSOLE 1
+#define USE_CONSOLE 0
 
 BOOL APIENTRY DllMain([[maybe_unused]]HMODULE hModule, DWORD ul_reason_for_call, [[maybe_unused]] LPVOID lpReserved)
 {
