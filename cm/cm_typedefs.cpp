@@ -123,7 +123,9 @@ bool cm_brush::RB_MakeOutlinesRenderable(const cm_renderinfo& info, int& nverts)
 }
 
 cm_terrain::cm_terrain(const cLeaf_t* _leaf, std::vector<Triangles>&& _tris)
-	: m_leaf(_leaf), m_tris(std::move(_tris)) {}
+	: m_leaf(_leaf), m_tris(std::move(_tris)) {
+	m_numVerts = 3;
+}
 cm_terrain::~cm_terrain() = default;
 
 bool cm_terrain::RB_MakeInteriorsRenderable(const cm_renderinfo& info) const
@@ -138,10 +140,10 @@ bool cm_terrain::RB_MakeInteriorsRenderable(const cm_renderinfo& info) const
 	for (const auto& tris : m_tris) {
 
 		for (const auto& tri : tris) {
-			if (tri.has_collision == false && info.only_colliding)
+			if (info.only_colliding && tri.has_collision == false)
 				continue;
 
-			if ((tri.plane[2] < 0.3f || tri.plane[2] > 0.7f) && info.only_bounces)
+			if (info.only_bounces && (tri.plane[2] < 0.3f || tri.plane[2] > 0.7f))
 				continue;
 
 			if (tri.a.dist(viewpos) > info.draw_dist)

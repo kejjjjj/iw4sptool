@@ -9,6 +9,7 @@
 #include "cm/cm_cgentities.hpp"
 #include "cm/cm_entity.hpp"
 #include "cm/cm_debug.hpp"
+#include "sys/sys_time.hpp"
 
 #include <windows.h>
 #include <sstream>
@@ -17,21 +18,15 @@ static void CG_DrawTrigger(float& y, const vec4_t color)
 {
 	auto& trigger = CGDebugData::currentTrigger;
 
-	if (!trigger.ent) 
+	if (!trigger.ent || (Sys_Milliseconds() - 100u) >= trigger.m_uTouchTime)
 		return;
-	
-	std::stringstream ss;
 
-	for (auto& [k, v] : trigger.m_oEntityFields)
-		ss << k << ": " << v << '\n';
+	const auto& str = trigger.m_sDisplayText;
 
-	auto asStr = ss.str();
-
-	if (asStr.length()) {
-		R_DrawTextWithEffects(asStr.c_str(), "fonts/bigdevfont", 0, y, 0.4f, 0.45f, 0, color, 3, vec4_t{ 1,0,0,0 });
-		y += 10 * trigger.m_oEntityFields.size();
+	if (str.length()) {
+		R_DrawTextWithEffects(str.c_str(), "fonts/bigdevfont", 0, y, 0.4f, 0.45f, 0, color, 3, vec4_t{ 1,0,0,0 });
+		y += 7.f * trigger.m_oEntityFields.size();
 	}
-
 }
 
 static void CG_DrawCoordinates(float& y, const vec4_t color)
@@ -45,7 +40,7 @@ static void CG_DrawCoordinates(float& y, const vec4_t color)
 		viewpos[0], viewpos[1], viewpos[2]);
 
 	R_DrawTextWithEffects(buff, "fonts/bigdevfont", 0, y, 0.4f, 0.45f, 0, color, 3, vec4_t{ 1,0,0,0 });
-	y += 25.f;
+	y += 30.f;
 }
 
 void CG_DrawFullScreenDebugOverlays(int localClientNum) {

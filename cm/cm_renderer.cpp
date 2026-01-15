@@ -100,7 +100,7 @@ void CM_ShowCollision()
 
 		std::unique_lock<std::mutex> gentLock(CGentities::GetLock());
 
-		const auto showConnections = Dvar_FindMalleableVar("cm_entityConnections")->current.enabled;
+		//const auto showConnections = Dvar_FindMalleableVar("cm_entityConnections")->current.enabled;
 
 		CGentities::ForEach([&](const GentityPtr_t& gent) {
 			auto numVerts = gent->GetNumVerts();
@@ -110,9 +110,9 @@ void CM_ShowCollision()
 				CGDebugData::tessIndices += 3 * (numVerts - 2);
 			}
 
-			if (showConnections) {
-				gent->RB_RenderConnections(render_info, vert_count);
-			}
+			//if (showConnections) {
+			//	gent->RB_RenderConnections(render_info, vert_count);
+			//}
 		});
 
 		if (vert_count)

@@ -13,6 +13,7 @@ inline struct CmdArgs* cmd_args = reinterpret_cast<CmdArgs*>(0x144C950);
 inline struct level_locals_t* level = reinterpret_cast<level_locals_t*>(0x10A3C10);
 inline struct ent_field_t* ent_fields = reinterpret_cast<ent_field_t*>(0x6EAA18);
 inline struct refdef_t* refdef = reinterpret_cast<refdef_t*>(0x77FAD0);
+inline struct gentity_s* gentities = reinterpret_cast<gentity_s*>(0x04DA780);
 inline float* viewpos = reinterpret_cast<float*>(0x77FAE8);
 inline unsigned __int16* scr_const_script_brushmodel = reinterpret_cast<unsigned __int16*>(0x12CC022);
 

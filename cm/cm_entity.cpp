@@ -95,10 +95,7 @@ void CGameEntity::RB_RenderConnections([[maybe_unused]] const cm_renderinfo& inf
 	}
 }
 
-static std::array<std::string, 6> nonVerboseInfoStrings = {
-	"classname", "targetname", "spawnflags",
-	"target", "script_noteworthy", "script_flag"
-};
+
 void CGameEntity::CG_Render2D(float drawDist, entity_info_type entType) const
 {
 	if (entType == entity_info_type::eit_disabled)
@@ -123,7 +120,7 @@ void CGameEntity::CG_Render2D(float drawDist, entity_info_type entType) const
 				continue;
 		}
 
-		buff += std::string(key) + " - " + value + "\n";
+		buff += std::string(key) + ": " + value + "\n";
 	}
 
 	if (buff.empty())

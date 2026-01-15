@@ -5,6 +5,8 @@
 
 #include <memory>
 #include <vector>
+#include <array>
+#include <string>
 
 struct gentity_s;
 struct cbrush;
@@ -25,6 +27,10 @@ enum class entity_info_type
 	eit_disabled,
 	eit_enabled,
 	eit_verbose
+};
+inline static constexpr std::array<std::string_view, 6> nonVerboseInfoStrings = {
+	"classname", "targetname", "spawnflags",
+	"target", "script_noteworthy", "script_flag"
 };
 
 class CGameEntity

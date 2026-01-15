@@ -4,6 +4,7 @@
 #include "cm/cm_typedefs.hpp"
 #include "com/com_vector.hpp"
 #include "cm/cm_clipmap.hpp"
+#include "com/com_channel.hpp"
 
 #include <ranges>
 
@@ -61,6 +62,8 @@ std::unique_ptr<cm_terrain> CM_TerrainFromLeaf(const cLeaf_t* leaf, const std::u
 		++aabbIdx;
 	} while (aabbIdx < leaf->collAabbCount);
 
+	
+
 	return std::make_unique<cm_terrain>(leaf, std::move(tris));
 }
 std::vector<cm_triangle> CM_AdvanceAabbTree(const CollisionAabbTree* aabbTree, const std::unordered_set<std::string>& filters, const float* color)
@@ -71,7 +74,7 @@ std::vector<cm_triangle> CM_AdvanceAabbTree(const CollisionAabbTree* aabbTree, c
 		auto child = &cm->aabbTrees[aabbTree->u.firstChildIndex];
 		for ([[maybe_unused]] const auto i : std::views::iota(0u, aabbTree->childCount)) {
 			auto newTris = CM_AdvanceAabbTree(child, filters, color);
-			tris.insert(tris.end(), newTris.begin(), newTris.end());
+			tris.insert(tris.begin(), newTris.begin(), newTris.end());
 			++child;
 		}
 		return tris;
@@ -104,6 +107,7 @@ std::vector<cm_triangle> CM_AdvanceAabbTree(const CollisionAabbTree* aabbTree, c
 			tri.a = cm->verts[cm->triIndices[triIndice]];
 			tri.b = cm->verts[cm->triIndices[triIndice + 1]];
 			tri.c = cm->verts[cm->triIndices[triIndice + 2]];
+
 			tri.material = mat;
 
 			PlaneFromPointsASM(tri.plane, tri.a, tri.b, tri.c);

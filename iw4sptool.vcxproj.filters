@@ -168,6 +168,9 @@
     <ClInclude Include="cl\cl_main.hpp">
       <Filter>Source Files\cl</Filter>
     </ClInclude>
+    <ClInclude Include="sys\sys_time.hpp">
+      <Filter>Source Files\sys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -295,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="cl\cl_main.cpp">
       <Filter>Source Files\cl</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\sys_time.cpp">
+      <Filter>Source Files\sys</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

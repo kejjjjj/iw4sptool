@@ -14,6 +14,8 @@ struct CGDebugData
 	static struct TriggerData {
 		gentity_s* ent;
 		std::unordered_map<std::string, std::string> m_oEntityFields;
+		std::string m_sDisplayText;
+		unsigned long m_uTouchTime;
 	}currentTrigger;
 
 };

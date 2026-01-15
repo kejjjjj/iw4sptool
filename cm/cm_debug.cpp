@@ -28,7 +28,7 @@ void CM_LoadDvars()
 		"Select whether to display the collision surfaces as wireframe or poly interiors");
 
 	Dvar_RegisterBool("cm_debug", dvar_flags::saved, false, "show debug information");
-	Dvar_RegisterBool("cm_entityConnections", dvar_flags::saved, true, "Draw lines between connected entities");
+	//Dvar_RegisterBool("cm_entityConnections", dvar_flags::saved, true, "Draw lines between connected entities");
 	Dvar_RegisterEnum("cm_entityInfo", entity_info, 3, dvar_flags::saved, "Display entity information");
 
 
@@ -42,6 +42,7 @@ void CM_LoadDvars()
 	Dvar_RegisterBool("cm_onlyElevators", dvar_flags::none, false, "Only display surfaces which can be elevated");
 
 	Dvar_RegisterBool("cm_triggerDisable", dvar_flags::none, false, "Triggers will not have any effect");
+	Dvar_RegisterBool("cm_triggerShowInfo", dvar_flags::none, false, "Show information about the trigger we're currently activating");
 
 	Dvar_RegisterBool("pm_coordinates", dvar_flags::saved, false, "show player coordinates");
 
