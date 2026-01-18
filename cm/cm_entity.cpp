@@ -9,9 +9,14 @@
 #include "r/backend/rb_endscene.hpp"
 #include "r/r_drawtools.hpp"
 #include "sl/sl_string.hpp"
+#include "utils/engine.hpp"
+#include "cm/cm_renderer.hpp"
+#include "cm/cm_clipmap.hpp"
 
 #include <cassert>
 #include <ranges>
+
+std::unordered_map<gentity_s*, CStaticEntityFields::EntityKVs> CStaticEntityFields::m_oGentityFields;
 
 CGameEntity::CGameEntity(gentity_s* const g) :
 	m_pOwner(g),
@@ -29,22 +34,11 @@ bool CGameEntity::IsBrushModel() const noexcept
 }
 void CGameEntity::ParseEntityFields()
 {
-	G_ResetEntityParsePoint(); 
-
-	const auto spawnVar = G_GetGentitySpawnVars(m_pOwner);
-
-	if (!spawnVar)
+	if (!CStaticEntityFields::m_oGentityFields.contains(m_pOwner)) {
 		return;
-
-	for (const auto index : std::views::iota(0, spawnVar->numSpawnVars)) {
-		const auto [key, value] = std::tie(spawnVar->spawnVars[index][0], spawnVar->spawnVars[index][1]);
-
-		for (auto f = ent_fields; f->name; ++f) {
-			if (std::string(f->name) == key) {
-				m_oEntityFields[key] = value;
-			}
-		}
 	}
+
+	m_oEntityFields = CStaticEntityFields::m_oGentityFields.at(m_pOwner);
 }
 void CGameEntity::GenerateConnections(const LevelGentities_t& lgentities)
 {
@@ -68,17 +62,29 @@ void CGameEntity::GenerateConnections(const LevelGentities_t& lgentities)
 		m_oGentityConnectionVertices.resize(m_oGentityConnections.size() * 2);
 }
 
-std::unique_ptr<CGameEntity> CGameEntity::CreateEntity(gentity_s* const g)
-{
-	const auto classname = SL_ConvertToString(g->classname);
-	const auto script_brushmodel = *reinterpret_cast<int16_t*>(0x12CC022);
+std::unique_ptr<CGameEntity> CGameEntity::CreateEntity(gentity_s* const g, bool makeAbstract) {
 
-	//mw2 equivelant to g->r.bmodel
-	if (g->classname == script_brushmodel || std::string(classname).starts_with("trigger")) {
-		auto&& p = std::make_unique<CBrushModel>(g);
+	if(makeAbstract)
+		return std::make_unique<CGameEntity>(g);
 
-		if (p->HasBrushModels())
-			return p;
+
+	if (CStaticEntityFields::m_oGentityFields.contains(g)) {
+
+		const auto& fields = CStaticEntityFields::m_oGentityFields.at(g);
+		
+		if(fields.contains("classname")){
+			const auto& classname = fields.at("classname");
+
+			if (classname == "script_brushmodel") {
+				auto&& p = std::make_unique<CBrushModel>(g);
+
+				if (p->HasBrushModels())
+					return p;
+
+			} else if (classname.starts_with("trigger")) {
+				return std::make_unique<CTrigger>(g);
+			}
+		}
 	}
 
 	return std::make_unique<CGameEntity>(g);
@@ -133,11 +139,44 @@ void CGameEntity::CG_Render2D(float drawDist, entity_info_type entType) const
 
 }
 
+
+CTrigger::CTrigger(gentity_s* const g) : CGameEntity(g){
+	CreateBrush(g->r.absBox);
+
+	m_vecMins = fvec3(g->r.absBox.midPoint) - fvec3(g->r.absBox.halfSize);
+	m_vecMaxs = fvec3(g->r.absBox.midPoint) + fvec3(g->r.absBox.halfSize);
+}
+CTrigger::~CTrigger() = default;
+
+void CTrigger::CreateBrush(const Bounds& bounds)
+{
+	for (const auto i : std::views::iota(0u, cm->numBrushes)) {
+		if (!cm->brushes[i].numsides) {
+			cbrush_t fakeBrush = cm->brushes[i];
+			cbrush aabb_brush(&fakeBrush, &bounds, MASK_PLAYERSOLID);
+
+			if (auto&& brush = CM_GetBrushPoints(aabb_brush, vec3_t{ 1.f, 0.f, 0.f})) {
+				//std::print("insert brush {}\n", CClipMap::Size());
+				CClipMap::InsertTrigger(std::move(brush));
+			}
+
+			return;
+		}
+	}
+
+}
+
+bool CTrigger::RB_MakeInteriorsRenderable([[maybe_unused]] const cm_renderinfo& info) const {
+	//return m_pBrush->RB_MakeInteriorsRenderable(info);
+	return false;
+}
+bool CTrigger::RB_MakeOutlinesRenderable([[maybe_unused]] const cm_renderinfo& info, [[maybe_unused]] int& nverts) const {
+	//return m_pBrush->RB_MakeOutlinesRenderable(info, nverts);
+	return false;
+}
+
 CBrushModel::CBrushModel(gentity_s* const g) : CGameEntity(g) {
 	assert(IsBrushModel());
-
-	if (g->s.index.brushmodel >= static_cast<int>(cm->numSubModels))
-		return;
 
 	const auto leaf = &cm->cmodels[g->s.index.brushmodel].leaf;
 	const auto& leafBrushNode = cm->leafbrushNodes[leaf->leafBrushNode];
@@ -147,9 +186,6 @@ CBrushModel::CBrushModel(gentity_s* const g) : CGameEntity(g) {
 	if (numBrushes > 0) {
 		for (const auto brushIndex : std::views::iota(0, numBrushes)) {
 			const auto brushWorldIndex = leafBrushNode.data.leaf.brushes[brushIndex];
-			if (brushWorldIndex > cm->numBrushes)
-				break;
-
 			auto&& temp = cbrush(&cm->brushes[brushWorldIndex], &cm->brushBounds[brushWorldIndex], cm->brushContents[brushWorldIndex]);
 
 			m_oBrushModels.emplace_back(std::make_unique<CBrush>(g, temp));

@@ -1,5 +1,6 @@
 #include "cm_cgentities.hpp"
 #include "cm_typedefs.hpp"
+#include "cm/cm_clipmap.hpp"
 #include "cg/cg_local.hpp"
 #include "cg/cg_offsets.hpp"
 #include "sl/sl_string.hpp"
@@ -13,13 +14,15 @@ std::mutex CGentities::mtx;
 
 void CGentities::CM_LoadAllEntitiesToClipMapWithFilter(const std::string& filter) {
 
+	CClipMap::ClearTriggersThreadSafe();
 	ClearThreadSafe();
+	
 	std::unique_lock<std::mutex> lock(GetLock());
 
 	const auto filters = CM_TokenizeFilters(filter);
 
 	//reset spawnvars
-	G_ResetEntityParsePoint();
+	//G_ResetEntityParsePoint();
 
 	for (const auto i : std::views::iota(0, level->num_entities)) {
 		auto gentity = &level->gentities[i];
@@ -31,7 +34,7 @@ void CGentities::CM_LoadAllEntitiesToClipMapWithFilter(const std::string& filter
 		if (!classname || !CM_IsMatchingFilter(filters, classname))
 			continue;
 
-		Insert(CGameEntity::CreateEntity(gentity));
+		Insert(CGameEntity::CreateEntity(gentity, false));
 
 	}
 

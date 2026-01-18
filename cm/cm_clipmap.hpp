@@ -5,6 +5,7 @@
 
 #include <mutex>
 #include <memory>
+#include <ranges>
 
 struct cm_geometry;
 struct cbrush;
@@ -25,29 +26,38 @@ public:
 
 	static void Insert(GeometryPtr_t& geom);
 	static void Insert(GeometryPtr_t&& geom);
+	static void InsertTrigger(GeometryPtr_t&& geom);
+
 	static void ClearAllOfType(const cm_geomtype t);
 	static auto GetAllOfType(const cm_geomtype t);
 
-	static auto begin() { return m_pLevelGeometry.begin(); }
-	static auto end() { return m_pLevelGeometry.end(); }
-	static size_t Size() { return m_pLevelGeometry.size(); }
-	static void Clear() { m_pLevelGeometry.clear(); m_pWipGeometry.reset(); }
+	//static auto begin() { return m_pLevelGeometry.begin(); }
+	//static auto end() { return m_pLevelGeometry.end(); }
+	static size_t Size() { return m_pLevelGeometry.size() + m_pLevelTriggerGeometry.size(); }
+	static void Clear() { m_pLevelGeometry.clear(); m_pLevelTriggerGeometry.clear(); m_pWipGeometry.reset(); }
+	static void ClearTriggers() { m_pLevelTriggerGeometry.clear(); }
+
 	static void ClearThreadSafe() { std::unique_lock<std::mutex> lock(mtx); Clear(); }
+	static void ClearClipMapThreadSafe() { std::unique_lock<std::mutex> lock(mtx); m_pLevelGeometry.clear(); m_pWipGeometry.reset(); }
+	static void ClearTriggersThreadSafe() { std::unique_lock<std::mutex> lock(mtx); ClearTriggers(); }
 
 	inline static auto& GetLock() { return mtx; }
 
 	template<typename Func>
 	static void ForEach(Func func) {
 
-		for (auto& geo : m_pLevelGeometry)
-			func(geo);
+		for([[maybe_unused]] const auto i : std::views::iota(0u, m_pLevelGeometry.size()))
+			func(m_pLevelGeometry[i]);
 
+		for ([[maybe_unused]] const auto i : std::views::iota(0u, m_pLevelTriggerGeometry.size()))
+			func(m_pLevelTriggerGeometry[i]);
 	}
 
 private:
 	static GeometryPtr_t m_pWipGeometry;
 	static fvec3 m_vecWipGeometryColor;
 	static LevelGeometry_t m_pLevelGeometry;
+	static LevelGeometry_t m_pLevelTriggerGeometry;
 
 	static std::mutex mtx;
 };

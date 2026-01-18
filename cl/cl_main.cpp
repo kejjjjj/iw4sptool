@@ -3,10 +3,12 @@
 #include "cm/cm_cgentities.hpp"
 #include "cm/cm_typedefs.hpp"
 #include "utils/hook.hpp"
+#include "cm/cm_entity.hpp"
 
 void CL_Disconnect(int a1, int a2) {
 	CClipMap::ClearThreadSafe();
 	CGentities::ClearThreadSafe();
+	CStaticEntityFields::m_oGentityFields.clear();
 
 	if (const auto f = CStaticHooks::FindByName("CL_Disconnect"))
 		return f->Call<void>(a1, a2);

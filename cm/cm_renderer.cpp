@@ -47,74 +47,82 @@ void CM_ShowCollision()
 	CGDebugData::tessIndices = 0;
 	
 	if (render_info.poly_type != pt_edges) {
-		std::unique_lock<std::mutex> lock(CClipMap::GetLock());
+		{
+			std::unique_lock<std::mutex> lock(CClipMap::GetLock());
 
-		RB_BeginSurfaceInternal(true, render_info.depth_test);
+			RB_BeginSurfaceInternal(true, render_info.depth_test);
 
-		CClipMap::ForEach([&](const GeometryPtr_t& poly) {
+			CClipMap::ForEach([&](const GeometryPtr_t& poly) {
 
-			if (RB_CheckTessOverflow(poly->m_numVerts, 3 * (poly->m_numVerts - 2)))
-				RB_TessOverflow(true, render_info.depth_test);
+				if (RB_CheckTessOverflow(poly->m_numVerts, 3 * (poly->m_numVerts - 2)))
+					RB_TessOverflow(true, render_info.depth_test);
 
-			if (poly->Type() == cm_geomtype::brush && brush_allowed
-				|| poly->Type() == cm_geomtype::terrain && terrain_allowed
-				|| poly->Type() == cm_geomtype::model) {
-				if (poly->RB_MakeInteriorsRenderable(render_info)) {
-					CGDebugData::tessVerts += poly->m_numVerts;
-					CGDebugData::tessIndices += 3 * (poly->m_numVerts - 2);
+				if (poly->Type() == cm_geomtype::brush && brush_allowed
+					|| poly->Type() == cm_geomtype::terrain && terrain_allowed
+					|| poly->Type() == cm_geomtype::model) {
+					if (poly->RB_MakeInteriorsRenderable(render_info)) {
+						CGDebugData::tessVerts += poly->m_numVerts;
+						CGDebugData::tessIndices += 3 * (poly->m_numVerts - 2);
+					}
 				}
-			}
 
-		});
+				});
+		}
+		{
+			std::unique_lock<std::mutex> gentLock(CGentities::GetLock());
 
-		std::unique_lock<std::mutex> gentLock(CGentities::GetLock());
+			CGentities::ForEach([&render_info](const GentityPtr_t& gent) {
 
-		CGentities::ForEach([&render_info](const GentityPtr_t& gent) {
+				auto numVerts = gent->GetNumVerts();
+				if (RB_CheckTessOverflow(numVerts, 3 * (numVerts - 2)))
+					RB_TessOverflow(true, render_info.depth_test);
 
-			auto numVerts = gent->GetNumVerts();
-			if (RB_CheckTessOverflow(numVerts, 3 * (numVerts - 2)))
-				RB_TessOverflow(true, render_info.depth_test);
-
-			if (gent->RB_MakeInteriorsRenderable(render_info)) {
-				CGDebugData::tessVerts += numVerts;
-				CGDebugData::tessIndices += 3 * (numVerts - 2);
-			}
-		});
+				if (gent->RB_MakeInteriorsRenderable(render_info)) {
+					CGDebugData::tessVerts += numVerts;
+					CGDebugData::tessIndices += 3 * (numVerts - 2);
+				}
+				});
+		}
 
 		RB_EndTessSurface();
 	}
 
 	if (render_info.poly_type != pt_polys) {
-
 		int vert_count = 0;
-		CClipMap::ForEach([&](const GeometryPtr_t& poly) {
-			if (poly->Type() == cm_geomtype::brush && brush_allowed
-				|| poly->Type() == cm_geomtype::terrain && terrain_allowed
-				|| poly->Type() == cm_geomtype::model) {
-				if (poly->RB_MakeOutlinesRenderable(render_info, vert_count)) {
-					CGDebugData::tessVerts += poly->m_numVerts;
-					CGDebugData::tessIndices += 3 * (poly->m_numVerts - 2);
+		{
+			std::unique_lock<std::mutex> lock(CClipMap::GetLock());
+
+			CClipMap::ForEach([&](const GeometryPtr_t& poly) {
+
+				if (poly->Type() == cm_geomtype::brush && brush_allowed
+					|| poly->Type() == cm_geomtype::terrain && terrain_allowed
+					|| poly->Type() == cm_geomtype::model) {
+					if (poly->RB_MakeOutlinesRenderable(render_info, vert_count)) {
+						CGDebugData::tessVerts += poly->m_numVerts;
+						CGDebugData::tessIndices += 3 * (poly->m_numVerts - 2);
+					}
 				}
-			}
-		});
+			});
+		}
+		{
+			std::unique_lock<std::mutex> gentLock(CGentities::GetLock());
 
-		std::unique_lock<std::mutex> gentLock(CGentities::GetLock());
+			const auto showConnections = Dvar_FindMalleableVar("cm_entityConnections")->current.enabled;
 
-		//const auto showConnections = Dvar_FindMalleableVar("cm_entityConnections")->current.enabled;
+			CGentities::ForEach([&](const GentityPtr_t& gent) {
+				auto numVerts = gent->GetNumVerts();
 
-		CGentities::ForEach([&](const GentityPtr_t& gent) {
-			auto numVerts = gent->GetNumVerts();
+				if (gent->RB_MakeOutlinesRenderable(render_info, vert_count)) {
+					CGDebugData::tessVerts += numVerts;
+					CGDebugData::tessIndices += 3 * (numVerts - 2);
+				}
 
-			if (gent->RB_MakeOutlinesRenderable(render_info, vert_count)) {
-				CGDebugData::tessVerts += numVerts;
-				CGDebugData::tessIndices += 3 * (numVerts - 2);
-			}
+				if (showConnections) {
+					gent->RB_RenderConnections(render_info, vert_count);
+				}
+				});
 
-			//if (showConnections) {
-			//	gent->RB_RenderConnections(render_info, vert_count);
-			//}
-		});
-
+		}
 		if (vert_count)
 			RB_DrawLines3D(vert_count / 2, 1, CGDebugData::g_debugPolyVerts, render_info.depth_test);
 	}

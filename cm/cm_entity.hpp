@@ -33,6 +33,11 @@ inline static constexpr std::array<std::string_view, 6> nonVerboseInfoStrings = 
 	"target", "script_noteworthy", "script_flag"
 };
 
+struct CStaticEntityFields {
+	using EntityKVs = std::unordered_map<std::string, std::string>;
+	static std::unordered_map<gentity_s*, EntityKVs> m_oGentityFields;
+};
+
 class CGameEntity
 {
 	friend class CGentities;
@@ -42,7 +47,7 @@ public:
 	CGameEntity(gentity_s* const g);
 	virtual ~CGameEntity();
 
-	[[nodiscard]] static std::unique_ptr<CGameEntity> CreateEntity(gentity_s* const g);
+	[[nodiscard]] static std::unique_ptr<CGameEntity> CreateEntity(gentity_s* const g, bool makeAbstract);
 
 	[[nodiscard]] virtual bool RB_MakeInteriorsRenderable([[maybe_unused]] const cm_renderinfo& info) const { return false; }
 	[[nodiscard]] virtual bool RB_MakeOutlinesRenderable([[maybe_unused]] const cm_renderinfo& info, [[maybe_unused]] int& nverts) const { return false; }
@@ -62,6 +67,8 @@ protected:
 
 	mutable fvec3 m_vecOldOrigin;
 	mutable fvec3 m_vecOldAngles;
+
+	CStaticEntityFields::EntityKVs m_oEntityFields;
 private:
 	[[nodiscard]] constexpr virtual bool HasBrushModels() const noexcept { return false; }
 
@@ -70,12 +77,31 @@ private:
 
 	gentity_s* const m_pOwner{};
 
-	std::unordered_map<std::string, std::string> m_oEntityFields;
 	std::vector<CGentityConnection> m_oGentityConnections;
 	mutable std::vector<GfxPointVertex> m_oGentityConnectionVertices;
 
 };
 
+class CTrigger final : public CGameEntity
+{
+public:
+	CTrigger(gentity_s* const g);
+	~CTrigger();
+
+	[[nodiscard]] bool RB_MakeInteriorsRenderable([[maybe_unused]] const cm_renderinfo& info) const override;
+	[[nodiscard]] bool RB_MakeOutlinesRenderable([[maybe_unused]] const cm_renderinfo& info, int& nverts) const override;
+
+	//since it's an AABB
+	[[nodiscard]] int GetNumVerts() const noexcept override { return 12; }
+
+private:
+	void CreateBrush(const struct Bounds& bounds);
+
+	fvec3 m_vecMins;
+	fvec3 m_vecMaxs;
+
+	//std::unique_ptr<cm_geometry> m_pBrush;
+};
 class CBrushModel final : public CGameEntity
 {
 public:

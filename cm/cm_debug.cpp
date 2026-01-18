@@ -3,8 +3,7 @@
 #include "cmd/cmd.hpp"
 #include "dvar/dvar.hpp"
 #include "g/g_entity.hpp"
-
-#include <print>
+#include "r/r_drawtools.hpp"
 
 volatile int CGDebugData::tessVerts{};
 volatile int CGDebugData::tessIndices{};
@@ -28,7 +27,7 @@ void CM_LoadDvars()
 		"Select whether to display the collision surfaces as wireframe or poly interiors");
 
 	Dvar_RegisterBool("cm_debug", dvar_flags::saved, false, "show debug information");
-	//Dvar_RegisterBool("cm_entityConnections", dvar_flags::saved, true, "Draw lines between connected entities");
+	Dvar_RegisterBool("cm_entityConnections", dvar_flags::saved, true, "Draw lines between connected entities");
 	Dvar_RegisterEnum("cm_entityInfo", entity_info, 3, dvar_flags::saved, "Display entity information");
 
 
@@ -42,8 +41,20 @@ void CM_LoadDvars()
 	Dvar_RegisterBool("cm_onlyElevators", dvar_flags::none, false, "Only display surfaces which can be elevated");
 
 	Dvar_RegisterBool("cm_triggerDisable", dvar_flags::none, false, "Triggers will not have any effect");
-	Dvar_RegisterBool("cm_triggerShowInfo", dvar_flags::none, false, "Show information about the trigger we're currently activating");
+	Dvar_RegisterBool("cm_triggerShowInfo", dvar_flags::saved, false, "Show information about the trigger we're currently activating");
 
 	Dvar_RegisterBool("pm_coordinates", dvar_flags::saved, false, "show player coordinates");
 
+}
+
+void CM_DrawDebug(float& y, const vec4_t color)
+{
+	char buff[256];
+	sprintf_s(buff,
+		"verts:   %i\n"
+		"indices: %i\n",
+		CGDebugData::tessVerts, CGDebugData::tessIndices);
+
+	R_DrawTextWithEffects(buff, "fonts/bigdevFont", 0, y, 0.4f, 0.45f, 0, color, 3, vec4_t{ 1,0,0,0 });
+	y += 20.f;
 }

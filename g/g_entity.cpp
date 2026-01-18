@@ -54,7 +54,7 @@ void G_Trigger(gentity_s* self, gentity_s* other){
 			CGDebugData::currentTrigger.ent = self;
 			CGDebugData::currentTrigger.m_oEntityFields.clear();
 
-			if (const auto data = CGameEntity::CreateEntity(self)) {
+			if (const auto data = CGameEntity::CreateEntity(self, true)) {
 				CGDebugData::currentTrigger.m_oEntityFields = data->m_oEntityFields;
 				if (const auto* cm_entityInfo = Dvar_FindMalleableVar("cm_entityInfo")) {
 					std::stringstream ss;

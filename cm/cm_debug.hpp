@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include "cg/cg_local.hpp"
+#include "utils/defs.hpp"
 
 struct CGDebugData
 {
@@ -20,5 +21,5 @@ struct CGDebugData
 
 };
 
-
 void CM_LoadDvars();
+void CM_DrawDebug(float& y, const vec4_t color);

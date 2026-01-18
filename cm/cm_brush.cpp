@@ -24,11 +24,11 @@ void CM_ShowCollisionFilter()
 	if (num_args == 1) {
 		if (CClipMap::Size() == 0)
 			Com_Printf(CON_CHANNEL_CONSOLEONLY, "there is no geometry to be cleared.. did you intend to use cm_showCollisionFilter <material>?\n");
-		CClipMap::ClearThreadSafe();
+		CClipMap::ClearClipMapThreadSafe();
 		return;
 	}
 
-	CClipMap::ClearThreadSafe();
+	CClipMap::ClearClipMapThreadSafe();
 
 	std::string filter;
 

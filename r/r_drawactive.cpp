@@ -25,7 +25,7 @@ static void CG_DrawTrigger(float& y, const vec4_t color)
 
 	if (str.length()) {
 		R_DrawTextWithEffects(str.c_str(), "fonts/bigdevfont", 0, y, 0.4f, 0.45f, 0, color, 3, vec4_t{ 1,0,0,0 });
-		y += 7.f * trigger.m_oEntityFields.size();
+		y += 3.f * trigger.m_oEntityFields.size();
 	}
 }
 
@@ -40,7 +40,7 @@ static void CG_DrawCoordinates(float& y, const vec4_t color)
 		viewpos[0], viewpos[1], viewpos[2]);
 
 	R_DrawTextWithEffects(buff, "fonts/bigdevfont", 0, y, 0.4f, 0.45f, 0, color, 3, vec4_t{ 1,0,0,0 });
-	y += 30.f;
+	y += 32.f;
 }
 
 void CG_DrawFullScreenDebugOverlays(int localClientNum) {
@@ -48,6 +48,8 @@ void CG_DrawFullScreenDebugOverlays(int localClientNum) {
 	static dvar_s* pm_coordinates = Dvar_FindMalleableVar("pm_coordinates");
 	static dvar_s* cm_entityInfo = Dvar_FindMalleableVar("cm_entityInfo");
 	static dvar_s* cm_showCollisionDist = Dvar_FindMalleableVar("cm_showCollisionDist");
+	static dvar_s* cm_debug = Dvar_FindMalleableVar("cm_debug");
+	static dvar_s* cm_triggerShowInfo = Dvar_FindMalleableVar("cm_triggerShowInfo");
 
 	//CG_CornerDebugPrint("Hello!", vec4_t{ 1,1,1,1 }, Scr_GetPlacement(), 100.f, 100.f);
 
@@ -61,8 +63,12 @@ void CG_DrawFullScreenDebugOverlays(int localClientNum) {
 	if (pm_coordinates && pm_coordinates->current.enabled) 
 		CG_DrawCoordinates(y, color);
 
-	CG_DrawTrigger(y, color);
+	if (cm_debug && cm_debug->current.enabled)
+		CM_DrawDebug(y, color);
 
+	if (cm_triggerShowInfo && cm_triggerShowInfo->current.enabled)
+		CG_DrawTrigger(y, color);
+	
 	if (cm_showCollisionDist && cm_entityInfo && cm_entityInfo->current.integer) {
 
 		CGentities::ForEach([](GentityPtr_t& ptr) {

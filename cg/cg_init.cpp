@@ -19,6 +19,7 @@
 #include "cm/cm_debug.hpp"
 #include "g/g_entity.hpp"
 #include "cl/cl_main.hpp"
+#include "g/g_spawn.hpp"
 
 using namespace std::chrono_literals;
 
@@ -85,6 +86,7 @@ void CG_Init() {
 	CStaticHooks::Create("__asm_adjacency_winding", 0x483D16, __brush::__asm_adjacency_winding);
 	CStaticHooks::Create("CG_DrawFullScreenDebugOverlays", 0x4E2340, CG_DrawFullScreenDebugOverlays);
 	CStaticHooks::Create("CL_Disconnect", 0x443DF0, CL_Disconnect);
+	CStaticHooks::Create("G_ParseEntityFields", 0x5DB0E7, G_ParseEntityFields);
 
 	CStaticHooks::Create("G_Trigger", 0x46E2C0, G_Trigger);
 	

@@ -94,30 +94,86 @@ constexpr std::array<std::int32_t, 24> iEdgePairs =
 constexpr auto iNextEdgePair = &iEdgePairs[1];
 constexpr auto iota = std::views::iota;
 
-void RB_DrawBoxEdges(const fvec3& mins, const fvec3& maxs, bool depthtest, const float* color) {
-	float v[8][3]{};
-	for (const auto i : iota(0u, 8u)) {
-		for (const auto j : iota(0u, 3u)) {
+std::vector<fvec3> CM_GetBoxEdges(const fvec3& min, const fvec3& max) {
+	return {
+		// Bottom face
+		{min.x, min.y, min.z}, {max.x, min.y, min.z},
+		{max.x, min.y, min.z}, {max.x, max.y, min.z},
+		{max.x, max.y, min.z}, {min.x, max.y, min.z},
+		{min.x, max.y, min.z}, {min.x, min.y, min.z},
 
-			if ((i & (1 << j)) != 0)
-				v[i][j] = maxs[j];
-			else
-				v[i][j] = mins[j];
-		}
-	}
+		// Top face
+		{min.x, min.y, max.z}, {max.x, min.y, max.z},
+		{max.x, min.y, max.z}, {max.x, max.y, max.z},
+		{max.x, max.y, max.z}, {min.x, max.y, max.z},
+		{min.x, max.y, max.z}, {min.x, min.y, max.z},
 
-	std::vector<fvec3> points;
-	for (const auto i : iota(0u, 12u)) {
-		points.emplace_back(v[iEdgePairs[i * 2]]);
-		points.emplace_back(v[iNextEdgePair[i * 2]]);
-	}
+		// Vertical connectors
+		{min.x, min.y, min.z}, {min.x, min.y, max.z},
+		{max.x, min.y, min.z}, {max.x, min.y, max.z},
+		{max.x, max.y, min.z}, {max.x, max.y, max.z},
+		{min.x, max.y, min.z}, {min.x, max.y, max.z}
+	};
+}
+std::vector<fvec3> CM_GetBoxPolygons(const fvec3& mins, const fvec3& maxs)
+{
+	// 8 corners of the bounding box
+	std::array<fvec3, 8> corners = { {
+		{mins[0], mins[1], mins[2]},  // 0: ---
+		{maxs[0], mins[1], mins[2]},  // 1: +--
+		{maxs[0], maxs[1], mins[2]},  // 2: ++-
+		{mins[0], maxs[1], mins[2]},  // 3: -+-
+		{mins[0], mins[1], maxs[2]},  // 4: --+
+		{maxs[0], mins[1], maxs[2]},  // 5: +-+
+		{maxs[0], maxs[1], maxs[2]},  // 6: +++
+		{mins[0], maxs[1], maxs[2]}   // 7: -++
+	} };
 
-	auto vert_count = 0;
-	for (const auto i : iota(0u, 12u)) {
-		vert_count = RB_AddDebugLine(verts2, depthtest, points[i * 2].As<float*>(), points[i * 2 + 1].As<float*>(), color, vert_count);
-	}
+	// Triangle list: 12 faces × 2 triangles/face = 24 vertices (72 floats)
+	std::vector<fvec3> vertices;
+	vertices.reserve(36);
 
-	RB_DrawLines3D(vert_count / 2, 1, verts2, depthtest);
+	float x0 = mins[0], y0 = mins[1], z0 = mins[2];
+	float x1 = maxs[0], y1 = maxs[1], z1 = maxs[2];
+
+	// Helper to add one triangle (3 vertices)
+	auto addTriangle = [&](const fvec3& a, const fvec3& b, const fvec3& c) {
+		vertices.push_back(a);
+		vertices.push_back(b);
+		vertices.push_back(c);
+		};
+
+	// -------------------------------------------------------
+	// Front face  (z = z0)
+	// -------------------------------------------------------
+	addTriangle({ x0,y0,z0 }, { x1,y0,z0 }, { x1,y1,z0 });
+	addTriangle({ x0,y0,z0 }, { x1,y1,z0 }, { x0,y1,z0 });
+
+	// Back face   (z = z1)
+	addTriangle({ x0,y0,z1 }, { x0,y1,z1 }, { x1,y1,z1 });
+	addTriangle({ x0,y0,z1 }, { x1,y1,z1 }, { x1,y0,z1 });
+
+	// -------------------------------------------------------
+	// Left face   (x = x0)
+	// -------------------------------------------------------
+	addTriangle({ x0,y0,z0 }, { x0,y1,z0 }, { x0,y1,z1 });
+	addTriangle({ x0,y0,z0 }, { x0,y1,z1 }, { x0,y0,z1 });
+
+	// Right face  (x = x1)
+	addTriangle({ x1,y0,z0 }, { x1,y0,z1 }, { x1,y1,z1 });
+	addTriangle({ x1,y0,z0 }, { x1,y1,z1 }, { x1,y1,z0 });
+
+	// -------------------------------------------------------
+	// Bottom face (y = y0)
+	// -------------------------------------------------------
+	addTriangle({ x0,y0,z0 }, { x0,y0,z1 }, { x1,y0,z1 });
+	addTriangle({ x0,y0,z0 }, { x1,y0,z1 }, { x1,y0,z0 });
+
+	// Top face    (y = y1)
+	addTriangle({ x0,y1,z0 }, { x1,y1,z0 }, { x1,y1,z1 });
+	addTriangle({ x0,y1,z0 }, { x1,y1,z1 }, { x0,y1,z1 });
+
+	return vertices;
 }
 void RB_DrawPolyInteriors(const std::vector<fvec3>& points, const float* c, bool two_sided, bool depthTest)
 {
@@ -153,36 +209,7 @@ void RB_DrawPolyInteriors(const std::vector<fvec3>& points, const float* c, bool
 	RB_EndTessSurface();
 
 }
-void RB_DrawBoxPolygons(const fvec3& mins, const fvec3& maxs, const float* color, bool two_sided, bool depthTest)
-{
-	float v[8][3]{};
-	for (const auto i : iota(0u, 8u)) {
-		for (const auto j : iota(0u, 3u)) {
 
-			if ((i & (1 << j)) != 0)
-				v[i][j] = maxs[j];
-			else
-				v[i][j] = mins[j];
-		}
-	}
-
-
-	std::vector<fvec3> points;
-	for (const auto i : iota(0u, 12u)) {
-		points.emplace_back(v[iEdgePairs[i * 2]]);
-		points.emplace_back(v[iNextEdgePair[i * 2]]);
-	}
-
-	std::vector<fvec3> points2;
-
-	for (const auto i : iota(0u, 12u)) {
-		points2.emplace_back(points[i * 2]);
-		points2.emplace_back(points[i * 2 + 1]);
-
-	}
-
-	RB_DrawPolyInteriors(points2, color, two_sided, depthTest);
-}
 void RB_SetPolyVertice(float* xyz, const GfxColor* color, const int vert, const int index)
 {
 	VectorCopy(xyz, tess->verts[vert].xyzw);

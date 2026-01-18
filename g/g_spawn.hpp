@@ -3,4 +3,8 @@
 void G_SpawnEntitiesFromString();
 void G_ResetEntityParsePoint();
 
-struct SpawnVar* G_GetGentitySpawnVars(const struct gentity_s* gent);
+[[nodiscard]] int G_ParseSpawnVars(struct SpawnVar* var);
+[[nodiscard]] struct SpawnVar* G_GetGentitySpawnVars(const struct gentity_s* gent);
+
+
+void G_ParseEntityFields();

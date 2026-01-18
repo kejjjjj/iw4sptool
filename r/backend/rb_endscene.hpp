@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 template<typename T>
 struct vec3;
 
@@ -12,8 +14,8 @@ void RB_BeginSurfaceInternal(bool two_sided, bool depthTest);
 void RB_BeginSurface(bool two_sided, bool depthTest);
 
 void RB_DrawLines3D(int count, int width, const struct GfxPointVertex* verts, bool depthTest);
-void RB_DrawBoxEdges(const fvec3& mins, const fvec3& maxs, bool depthtest, const float* color);
-void RB_DrawBoxPolygons(const fvec3& mins, const fvec3& maxs, const float* color, bool two_sided, bool depthTest);
+[[nodiscard]] std::vector<fvec3> CM_GetBoxEdges(const fvec3& mins, const fvec3& maxs);
+[[nodiscard]] std::vector<fvec3> CM_GetBoxPolygons(const fvec3& mins, const fvec3& maxs);
 
 int RB_AddDebugLine(struct GfxPointVertex* verts, char depthTest, const float* start, const float* end, const float* color, int vertCount);
 void R_ConvertColorToBytes(const float* in, union GfxColor* out);

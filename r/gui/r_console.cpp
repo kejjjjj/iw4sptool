@@ -238,8 +238,10 @@ void CConsoleGui::DrawSuggestions() {
 		ImGui::AlignTextToFramePadding();
 		ImGui::TextColored(color, key);
 
-		ImGui::SameLine(key_width);
-		ImGui::TextColored(color, value);
+		if (value) {
+			ImGui::SameLine(key_width);
+			ImGui::TextColored(color, value);
+		}
 	};
 
 	if (m_suggestions.size() == 1) {
