@@ -43,9 +43,34 @@ static void CG_DrawCoordinates(float& y, const vec4_t color)
 	y += 32.f;
 }
 
+static void CG_DrawSprintMeter()
+{
+	constexpr auto width = 100.f;
+	constexpr auto height = 10.f;
+	rectDef_s rect{ 320.f - width / 2.f, 480.f - height, width, height, 0, 0 };
+	vec4_t color{1.f,1.f,1.f,.2f};
+	const auto material = rgp->colorChannelMixerMaterial;
+
+	__asm {
+		push ebx;
+		push esi;
+		push material;
+		push 0;
+		lea ebx, rect;
+		lea eax, color;
+		mov esi, 0x569440;
+		call esi;
+		add esp, 8;
+		pop esi;
+		pop ebx;
+	}
+
+}
+
 void CG_DrawFullScreenDebugOverlays(int localClientNum) {
 
 	static dvar_s* pm_coordinates = Dvar_FindMalleableVar("pm_coordinates");
+	static dvar_s* pm_sprintMeter = Dvar_FindMalleableVar("pm_sprintMeter");
 	static dvar_s* cm_entityInfo = Dvar_FindMalleableVar("cm_entityInfo");
 	static dvar_s* cm_showCollisionDist = Dvar_FindMalleableVar("cm_showCollisionDist");
 	static dvar_s* cm_debug = Dvar_FindMalleableVar("cm_debug");
@@ -69,6 +94,9 @@ void CG_DrawFullScreenDebugOverlays(int localClientNum) {
 	if (cm_triggerShowInfo && cm_triggerShowInfo->current.enabled)
 		CG_DrawTrigger(y, color);
 	
+	if (pm_sprintMeter && pm_sprintMeter->current.enabled)
+		CG_DrawSprintMeter();
+
 	if (cm_showCollisionDist && cm_entityInfo && cm_entityInfo->current.integer) {
 
 		CGentities::ForEach([](GentityPtr_t& ptr) {

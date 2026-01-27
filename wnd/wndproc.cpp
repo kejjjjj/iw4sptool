@@ -19,9 +19,6 @@ LRESULT WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 		break;
 	case WM_KEYDOWN:
-
-
-
 		if (wParam == 220) {
 			CStaticConsoleGui::Toggle();
 			return 1;

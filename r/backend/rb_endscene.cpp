@@ -22,6 +22,7 @@ bool RB_CheckTessOverflow(int vertexCount, int indexCount) {
 
 	return false;
 }
+
 void RB_BeginSurface(bool two_sided, bool depthTest) {
 
 	static Material material;

@@ -44,6 +44,7 @@ void CM_LoadDvars()
 	Dvar_RegisterBool("cm_triggerShowInfo", dvar_flags::saved, false, "Show information about the trigger we're currently activating");
 
 	Dvar_RegisterBool("pm_coordinates", dvar_flags::saved, false, "show player coordinates");
+	Dvar_RegisterBool("pm_sprintMeter", dvar_flags::saved, false, "show stamina bar (adjust colors with cg_sprintMeter*)");
 
 }
 
