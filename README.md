@@ -21,6 +21,8 @@
 
 ## Usage
 - The .asi file goes to the "miles" folder located in the mw2 root directory
+- The console can be opened with the ~ or ` key (the same as in cod4)
+- The console output window can be opened by pressing left shift and right shift at the same time
 - All commands start with the following prefixes:
     - cm_ (clip map)
     - pm_ (player movement)
