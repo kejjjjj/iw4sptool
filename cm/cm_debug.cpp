@@ -45,6 +45,8 @@ void CM_LoadDvars()
 
 	Dvar_RegisterBool("pm_coordinates", dvar_flags::saved, false, "show player coordinates");
 	Dvar_RegisterBool("pm_sprintMeter", dvar_flags::saved, false, "show stamina bar (adjust colors with cg_sprintMeter*)");
+	Dvar_RegisterBool("pm_bounceFix", dvar_flags::none, false, "enable bouncing");
+	Dvar_RegisterBool("pm_fpsFix", dvar_flags::none, false, "enable multiplayer fps physics");
 
 }
 

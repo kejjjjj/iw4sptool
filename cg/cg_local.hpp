@@ -2833,3 +2833,74 @@ struct rectDef_s
 	char horzAlign;
 	char vertAlign;
 };
+
+enum surfTraceType_t : __int64
+{
+	SURF_NODAMAGE = 0x1,
+	SURF_SLICK = 0x2,
+	SURF_SKY = 0x4,
+	SURF_LADDER = 0x8,
+	SURF_NOIMPACT = 0x10,
+	SURF_NOMARKS = 0x20,
+	SURF_NODRAW = 0x80,
+	SURF_NOPENETRATE = 0x100,
+	SURF_NOLIGHTMAP = 0x400,
+	SURF_NOSTEPS = 0x2000,
+	SURF_NONSOLID = 0x4000,
+	SURF_NODLIGHT = 0x20000,
+	SURF_NOCASTSHADOW = 0x40000,
+	SURF_BARK = 0x100000,
+	SURF_BRICK = 0x200000,
+	SURF_CARPET = 0x300000,
+	SURF_CLOTH = 0x400000,
+	SURF_CONCRETE = 0x500000,
+	SURF_DIRT = 0x600000,
+	SURF_FLESH = 0x700000,
+	SURF_FOLIAGE = 0x800000,
+	SURF_GLASS = 0x900000,
+	SURF_GRASS = 0xA00000,
+	SURF_GRAVEL = 0xB00000,
+	SURF_ICE = 0xC00000,
+	SURF_METAL = 0xD00000,
+	SURF_MUD = 0xE00000,
+	SURF_PAPER = 0xF00000,
+	SURF_PLASTER = 0x1000000,
+	SURF_ROCK = 0x1100000,
+	SURF_SAND = 0x1200000,
+	SURF_SNOW = 0x1300000,
+	SURF_WATER = 0x1400000,
+	SURF_WOOD = 0x1500000,
+	SURF_ASPHALT = 0x1600000,
+	SURF_CERAMIC = 0x1700000,
+	SURF_PLASTIC = 0x1800000,
+	SURF_RUBBER = 0x1900000,
+	SURF_CUSHION = 0x1A00000,
+	SURF_FRUIT = 0x1B00000,
+	SURF_PAINTEDMETAL = 0x1C00000,
+	SURF_MANTLEON = 0x2000000,
+	SURF_MANTLEOVER = 0x4000000,
+	SURF_PORTAL = 0x80000000,
+};
+enum TraceHitType : __int32
+{
+	TRACE_HITTYPE_NONE = 0x0,
+	TRACE_HITTYPE_ENTITY = 0x1,
+	TRACE_HITTYPE_DYNENT_MODEL = 0x2,
+	TRACE_HITTYPE_DYNENT_BRUSH = 0x3,
+};
+struct trace_t
+{
+	float fraction;
+	float normal[3];
+	surfTraceType_t surfaceFlags;
+	int contents;
+	const char* material;
+	TraceHitType hitType;
+	unsigned __int16 hitId;
+	unsigned __int16 modelIndex;
+	unsigned __int16 partName;
+	unsigned __int16 partGroup;
+	bool allsolid;
+	bool startsolid;
+	bool walkable;
+};

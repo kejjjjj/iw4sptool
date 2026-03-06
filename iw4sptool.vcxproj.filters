@@ -64,6 +64,9 @@
     <Filter Include="Source Files\cl">
       <UniqueIdentifier>{20252075-f4ff-45d0-80f4-bfcf6fa35ce8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\bg">
+      <UniqueIdentifier>{3451698b-cbe6-4530-aad7-cebcc63f7b8e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cm\cm_brush.hpp">
@@ -170,6 +173,9 @@
     </ClInclude>
     <ClInclude Include="sys\sys_time.hpp">
       <Filter>Source Files\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="bg\bg_pmove.hpp">
+      <Filter>Source Files\bg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -301,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="sys\sys_time.cpp">
       <Filter>Source Files\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="bg\bg_pmove.cpp">
+      <Filter>Source Files\bg</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

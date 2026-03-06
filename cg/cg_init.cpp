@@ -20,6 +20,7 @@
 #include "g/g_entity.hpp"
 #include "cl/cl_main.hpp"
 #include "g/g_spawn.hpp"
+#include "bg/bg_pmove.hpp"
 
 using namespace std::chrono_literals;
 
@@ -59,6 +60,7 @@ void CG_Init() {
 	CStaticMainGui::Initialize();
 	std::print("gui\n");
 
+
 	Engine::Tools::WriteBytes(0x424CB0, "\xC3");
 	Engine::Tools::WriteBytes(0x474E10, "\xC3");
 	Engine::Tools::WriteBytes(0x410870, "\xC3");
@@ -73,6 +75,7 @@ void CG_Init() {
 	Engine::Tools::NOP(0x04D35F2); // radius not specified for trigger_radius at (%g %g %g)
 	Engine::Tools::NOP(0x44A45E); // radius not specified for trigger_radius at (%g %g %g)
 	Engine::Tools::NOP(0x4D3642); // height not specified for trigger_radius at (%g %g %g)
+	//Engine::Tools::NOP(0x496DA9); // Query UPNP (causes massive lag spikes on failure)
 
 	std::print("patches\n");
 
@@ -89,7 +92,9 @@ void CG_Init() {
 	CStaticHooks::Create("G_ParseEntityFields", 0x5DB0E7, G_ParseEntityFields);
 
 	CStaticHooks::Create("G_Trigger", 0x46E2C0, G_Trigger);
-	
+	CStaticHooks::Create("PM_BounceFixASM", 0x46FF5A, PM_BounceFixASM);
+	CStaticHooks::Create("PM_FpsFixASM", 0x6508E3, PM_FpsFixASM);
+
 	std::print("hooks\n");
 
 	CM_LoadDvars();

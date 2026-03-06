@@ -17,6 +17,7 @@ struct CConsoleSuggestion {
 
 class CConsoleGui : public CBaseGui
 {
+	friend class CStaticConsoleGui;
 public:
 	void Render() override;
 
@@ -40,6 +41,7 @@ private:
 	bool m_bRenderingOutput{};
 	std::int32_t m_autoCompletionIndex{-1};
 	std::vector<CConsoleSuggestion> m_suggestions;
+	bool m_bScrollToBottom{ true };
 };
 
 struct CConsoleHistory {

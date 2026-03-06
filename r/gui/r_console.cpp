@@ -232,9 +232,12 @@ void CConsoleGui::DrawConsoleInput(float w)
 
 }
 void CConsoleGui::DrawSuggestions() {
+
+	const fvec2 size = adjust_from_640x480({ 640.f, 480.f });
+
 	const float key_width = static_cast<float>(adjust_from_640(180.0f));
 
-	auto Row = [&](const char* key, const char* value, const ImVec4 color={1,1,1,1}) {
+	const auto Row = [&](const char* key, const char* value, const ImVec4 color={1,1,1,1}) {
 		ImGui::AlignTextToFramePadding();
 		ImGui::TextColored(color, key);
 
@@ -258,22 +261,32 @@ void CConsoleGui::DrawSuggestions() {
 		
 	}
 
-	for (const auto& s : m_suggestions) {
+	if (!m_suggestions.empty()) {
+		float row_height = ImGui::GetFrameHeightWithSpacing();
+		float desired = row_height * m_suggestions.size();
+		float available = size.y - ImGui::GetCursorPosY() - ImGui::GetStyle().FramePadding.y * 3;
 
-		if (s.m_callback)
-			Row(std::get<1>(s.m_suggestion).c_str(), "", ImVec4{ 0.7f, 0.8f, 1.f,1.f});
-		else {
-			const auto d = std::get<0>(s.m_suggestion);
-			Row(d->name, Dvar_ValueToString(d, d->current));
+		ImGui::BeginChild("##suggestions", { size.x, std::min(desired, available) });
+
+		for (const auto& s : m_suggestions) {
+
+			if (s.m_callback)
+				Row(std::get<1>(s.m_suggestion).c_str(), "", ImVec4{ 0.7f, 0.8f, 1.f,1.f });
+			else {
+				const auto d = std::get<0>(s.m_suggestion);
+				Row(d->name, Dvar_ValueToString(d, d->current));
+			}
 		}
+
+		ImGui::EndChild();
 	}
 }
 void CConsoleGui::DrawConsoleOutput()
 {
 	const fvec2 size = adjust_from_640x480({ 640.f, 480.f });
-	float y = size.y - ImGui::GetCursorPosY();
+	const float y = size.y - ImGui::GetCursorPosY();
 
-	ImGui::BeginChild("##child1", { size.x, y });
+	ImGui::BeginChild("##child1", { size.x, y - ImGui::GetStyle().FramePadding.y * 3 });
 
 	int row = 0;
 	
@@ -296,9 +309,20 @@ void CConsoleGui::DrawConsoleOutput()
 			text = std::string(&textPool[firstChar], charCount);
 
 
-		ImGui::Text("%s", text.c_str());
+		ImGui::PushID(i);
+		ImGui::Selectable(text.c_str());
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+			ImGui::SetClipboardText(text.c_str());
+
+		ImGui::PopID();
+	}
+
+	if (m_bScrollToBottom) {
+		ImGui::SetScrollHereY(1.0f);
+		m_bScrollToBottom = false;
 	}
 	ImGui::EndChild();
+
 }
 
 std::unique_ptr<CConsoleGui> CStaticConsoleGui::Console{};
@@ -309,6 +333,7 @@ void CStaticConsoleGui::Toggle() {
 	if (!Console) {
 		Console = std::make_unique<CConsoleGui>();
 		Console->Open();
+		Console->m_bScrollToBottom = true;
 		return;
 	}
 

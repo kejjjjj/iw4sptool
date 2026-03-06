@@ -2,9 +2,15 @@
 #include "utils/engine.hpp"
 dvar_s* Dvar_FindMalleableVar(const char* name) {
 	__asm {
-		mov edi, name;
-		mov esi, 0x633480;
-		call esi;
+		push esi
+		push edi
+
+		mov edi, name
+		mov esi, 0x633480
+		call esi
+
+		pop edi
+		pop esi
 	}
 }
 const char* Dvar_ValueToString(const dvar_s* dvar, DvarValue value) {

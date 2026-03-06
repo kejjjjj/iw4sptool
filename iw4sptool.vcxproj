@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bg\bg_pmove.hpp" />
     <ClInclude Include="cg\cg_init.hpp" />
     <ClInclude Include="cg\cg_local.hpp" />
     <ClInclude Include="cg\cg_offsets.hpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="wnd\wndproc.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bg\bg_pmove.cpp" />
     <ClCompile Include="cg\cg_init.cpp" />
     <ClCompile Include="cl\cl_main.cpp" />
     <ClCompile Include="cmd\cmd.cpp" />
